@@ -1,0 +1,8 @@
+# PulseGuard-Dashboard klasörünün içindeki her şeyi (çöpleri) yoksay
+PulseGuard-Dashboard/*
+
+# AMA SADECE benim yazdığım koda izin ver (İstisna ekliyoruz)
+!PulseGuard-Dashboard/dashboard.py
+
+# Go programlarının ürettiği gereksiz dosyaları yoksay
+*.exe
