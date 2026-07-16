@@ -11,5 +11,5 @@ PulseGuard is a modular Command & Control (C2) infrastructure project designed f
 - **Concurrency Management:** Utilizes Go's native primitives to ensure high availability and responsiveness during high-load operations.
 
 ## Development Status
-This project is currently under active development as part of a professional cybersecurity internship program, focusing on developing secure and scalable infrastructure components.
+This project is currently under active development as part of a professional internship program, focusing on developing secure and scalable infrastructure components.
 
