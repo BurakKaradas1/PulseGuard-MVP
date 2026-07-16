@@ -1,0 +1,13 @@
+agent:
+  interval: 3s
+  collector_url: "https://www.google.com"
+
+thresholds:
+  cpu: 80
+  ram: 85
+  disk: 90
+
+checks:
+  system_integrity: true
+  analysis_detection: true
+  network_status: true
