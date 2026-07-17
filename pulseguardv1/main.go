@@ -14,7 +14,6 @@ func main() {
 		log.Fatalf("[-] Failed to load configuration: %v", err)
 	}
 
-	// 2. Aktif kontroller
 	var checkers []internal.Checker
 
 	if cfg.Checks.SystemIntegrity {
@@ -24,7 +23,7 @@ func main() {
 		checkers = append(checkers, &internal.AnalysisChecker{})
 	}
 	if cfg.Checks.NetworkStatus {
-		// YAML'dan okunan toplayıcı (C2) adresini enjekte ediyoruz
+		// YAML'dan okunan toplayıcı adresini enjekte ediyoruz
 		checkers = append(checkers, &internal.NetworkChecker{URL: cfg.Agent.CollectorURL})
 	}
 
@@ -39,14 +38,34 @@ func main() {
 
 	fmt.Printf("[+] PulseGuard Agent started. Monitoring every %s...\n", cfg.Agent.Interval)
 
-	for range ticker.C {
+	//Kuyruk
+	var eventQueue []internal.Event
+
+	for {
+		<-ticker.C
+		fmt.Println("\n[*] Running scheduled checks...")
+
+		//Tüm sensörleri çalıştır kuyruğa at
 		for _, c := range checkers {
-			event := c.Check()
-			if event.Passed {
-				fmt.Printf("[%s] [OK] %s: %s\n", event.Level, c.Name(), event.Message)
-			} else {
-				fmt.Printf("[%s] [FAIL] %s: %s\n", event.Level, c.Name(), event.Message)
+			result := c.Check()
+			eventQueue = append(eventQueue, result)
+
+			status := "[OK]"
+			if !result.Passed {
+				status = "[FAIL]"
 			}
+			fmt.Printf("[%s] %s %s: %s\n", result.Level, status, c.Name(), result.Message)
+		}
+
+		//Kuyruktaki tüm verileri C2 sunucusuna toplu olarak gönder
+		err := internal.SendBatch(eventQueue, cfg.Agent.CollectorURL)
+
+		if err != nil {
+			fmt.Printf("[!] Failed to push events to C2. Retrying later. Current queue size: %d\n", len(eventQueue))
+		} else {
+			// Gönderim başarılı olursa kuyruğu boşalt
+			fmt.Printf("[+] Successfully pushed %d events to C2. Clearing queue.\n", len(eventQueue))
+			eventQueue = nil
 		}
 	}
 }
