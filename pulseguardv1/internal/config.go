@@ -36,12 +36,12 @@ func LoadConfig(filename string) (*Config, error) {
 
 	var cfg Config
 
-	// 2. YAML verisini Go struct'ina cevir (Unmarshal)
+	// 2. YAML verisini Go struct'ina cevirir
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	// 3. Basariliysa Config'in bellek adresini dondur
+	// 3. Basariliysa Config'in bellek adresini dondurur
 	return &cfg, nil
 }
