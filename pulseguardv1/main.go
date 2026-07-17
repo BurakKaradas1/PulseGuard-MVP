@@ -8,13 +8,13 @@ import (
 )
 
 func main() {
-	// 1. YAML yapılandırma dosyasını yükle
+	// 1. YAML yapılandırma dosyası
 	cfg, err := internal.LoadConfig("config.yaml")
 	if err != nil {
 		log.Fatalf("[-] Failed to load configuration: %v", err)
 	}
 
-	// 2. Aktif kontrolleri dinamik olarak belirle
+	// 2. Aktif kontroller
 	var checkers []internal.Checker
 
 	if cfg.Checks.SystemIntegrity {
@@ -28,7 +28,12 @@ func main() {
 		checkers = append(checkers, &internal.NetworkChecker{URL: cfg.Agent.CollectorURL})
 	}
 
-	// 3. Ticker süresini YAML dosyasındaki değere göre dinamik başlat
+	// Hardware Checkers with YAML thresholds
+	checkers = append(checkers, &internal.CpuChecker{Threshold: cfg.Thresholds.CPU})
+	checkers = append(checkers, &internal.RamChecker{Threshold: cfg.Thresholds.RAM})
+	checkers = append(checkers, &internal.DiskChecker{Threshold: cfg.Thresholds.Disk})
+
+	// 3. Ticker süresi YAML dosyasındaki değere göre dinamik başlatılır
 	ticker := time.NewTicker(cfg.Agent.Interval)
 	defer ticker.Stop()
 
