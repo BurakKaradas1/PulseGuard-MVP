@@ -1,9 +1,14 @@
 package internal
 
 import (
+	"fmt"
 	"net/http"
 	"syscall"
 	"time"
+
+	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/disk"
+	"github.com/shirou/gopsutil/v3/mem"
 )
 
 type LogLevel string
@@ -70,4 +75,79 @@ func (n *NetworkChecker) Check() Event {
 	}
 
 	return Event{Passed: true, Level: InfoLevel, Message: "C2 connection successful"}
+}
+
+//------------------------------------------------------------
+
+// CPU Checker
+type CpuChecker struct {
+	Threshold int //YAML'dan gelecek sinir
+}
+
+func (c *CpuChecker) Name() string { return "CPU Usage" }
+func (c *CpuChecker) Check() Event {
+	percentages, err := cpu.Percent(0, false)
+	if err != nil {
+		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read CPU metric"}
+	}
+
+	usage := int(percentages[0])
+
+	if usage > c.Threshold {
+		message := fmt.Sprintf("CPU usage exceeded threshold: %d%%", usage)
+		return Event{Passed: false, Level: WarningLevel, Message: message}
+	}
+
+	message := fmt.Sprintf("CPU normal: %d%%", usage)
+	return Event{Passed: true, Level: InfoLevel, Message: message}
+}
+
+//-------------------------------------------------------------
+
+// RAM Checker
+type RamChecker struct {
+	Threshold int
+}
+
+func (r *RamChecker) Name() string { return "RAM Usage" }
+func (r *RamChecker) Check() Event {
+	virtualMem, err := mem.VirtualMemory()
+	if err != nil {
+		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read RAM metric"}
+	}
+
+	usedRam := int(virtualMem.UsedPercent)
+
+	if usedRam > r.Threshold {
+		message := fmt.Sprintf("RAM usage exceeded threshold: %d%%", usedRam)
+		return Event{Passed: false, Level: WarningLevel, Message: message}
+	}
+
+	message := fmt.Sprintf("RAM normal: %d%%", usedRam)
+	return Event{Passed: true, Level: InfoLevel, Message: message}
+}
+
+//--------------------------------------------------------------
+
+// Disk Checker
+type DiskChecker struct {
+	Threshold int
+}
+
+func (d *DiskChecker) Name() string { return "Disk Usage" }
+func (d *DiskChecker) Check() Event {
+	diskStat, err := disk.Usage("C:\\")
+	if err != nil {
+		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read Disk metric"}
+	}
+
+	usedSpace := int(diskStat.UsedPercent)
+
+	if usedSpace > d.Threshold {
+		message := fmt.Sprintf("Disk capacity exceeded threshold: %d%%", usedSpace)
+		return Event{Passed: false, Level: WarningLevel, Message: message}
+	}
+
+	message := fmt.Sprintf("Disk normal: %d%%", usedSpace)
+	return Event{Passed: true, Level: InfoLevel, Message: message}
 }
