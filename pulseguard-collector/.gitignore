@@ -6,3 +6,7 @@ PulseGuard-Dashboard/*
 
 # Go programlarının ürettiği gereksiz dosyaları yoksay
 *.exe
+
+#Veritabanı yoksay
+*.db
+pulseguard.db
