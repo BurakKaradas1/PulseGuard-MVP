@@ -1,0 +1,141 @@
+package main
+
+import (
+	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"database/sql"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+
+	_ "modernc.org/sqlite"
+)
+
+// İleride confige alınacak
+const secretKey = "super-secret-pulseguard-key"
+
+var db *sql.DB
+
+// Event struct'ı
+type Event struct {
+	Level   string `json:"level"`
+	Message string `json:"message"`
+	Passed  bool   `json:"passed"`
+}
+
+// Veritabanını başlatan kuran fonksiyon
+func initDB() {
+	var err error
+	db, err = sql.Open("sqlite", "./pulseguard.db")
+	if err != nil {
+		log.Fatal("Failed to connect to database:", err)
+	}
+
+	createTableQuery := `
+	CREATE TABLE IF NOT EXISTS events (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			level TEXT,
+			message TEXT,
+			passed BOOLEAN,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP);`
+
+	_, err = db.Exec(createTableQuery)
+	if err != nil {
+		log.Fatal("Failed to create tables:", err)
+	}
+	fmt.Println("[+] SQLite Database initialized successfully.")
+}
+
+// Bütünlük kanıtı
+func verifySignature(payload []byte, signature string) bool {
+	h := hmac.New(sha256.New, []byte(secretKey))
+	h.Write(payload)
+	expectedSignature := hex.EncodeToString(h.Sum(nil))
+	return hmac.Equal([]byte(expectedSignature), []byte(signature))
+}
+
+// Ajandan gelen batch isteklerini karşılayan endpoint
+func handleReceiveEvents(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	//Ajanın mührünü al
+	agentSignature := r.Header.Get("X-PulseGuard-Signature")
+	if agentSignature == "" {
+		http.Error(w, "Missing Signature", http.StatusUnauthorized)
+		return
+	}
+
+	//HTTP gövdesini oku
+	bodyBytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read body", http.StatusBadRequest)
+	}
+
+	r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
+	//Mühür kontrol
+	if !verifySignature(bodyBytes, agentSignature) {
+		fmt.Println("[!] SECURITY ALERT: Invalid signature detected! Potential tempering")
+		http.Error(w, "Invalid Signature", http.StatusUnauthorized)
+		return
+	}
+
+	//Mühür geçerliyse JSON ayrıştır
+	var events []Event
+	err = json.NewDecoder(r.Body).Decode(&events)
+	if err != nil {
+		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
+		return
+	}
+
+	//Eventleri SQLite'a kaydet
+	stmt, err := db.Prepare("INSERT INTO events(level, message, passed) VALUES (?, ?, ?)")
+	if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	defer stmt.Close()
+
+	for _, event := range events {
+		_, err = stmt.Exec(event.Level, event.Message, event.Passed)
+		if err != nil {
+			fmt.Printf("Failed to insert event: %v\n", err)
+		}
+	}
+
+	fmt.Printf("[+] Successfully verified and stored %d events from agent.\n", len(events))
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Batch processed successfully"))
+}
+
+// Sunucuya gelen her isteği terminale basar.
+func logRequest(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("[DEBUG] Gelen İstek: %s %s\n", r.Method, r.URL.Path)
+		next(w, r)
+	}
+}
+
+func main() {
+	initDB()
+	defer db.Close()
+
+	fmt.Println("PulseGuard C2 Server (Collector) Starting...")
+	fmt.Println("Listening on port 8080 (HMAC-SHA256 & SQLite Active)...")
+
+	//REST API Uç Noktaları
+	http.HandleFunc("/api/v1/events", logRequest(handleReceiveEvents))
+
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+}

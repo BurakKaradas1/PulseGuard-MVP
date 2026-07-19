@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"pulseguardv1/internal"
+	"pulseguard-agent/internal"
 	"time"
 )
 
@@ -61,7 +61,7 @@ func main() {
 		err := internal.SendBatch(eventQueue, cfg.Agent.CollectorURL)
 
 		if err != nil {
-			fmt.Printf("[!] Failed to push events to C2. Retrying later. Current queue size: %d\n", len(eventQueue))
+			fmt.Printf("[!] Failed to push events to C2. Hata Detayı: %v | Current queue size: %d\n", err, len(eventQueue))
 		} else {
 			// Gönderim başarılı olursa kuyruğu boşalt
 			fmt.Printf("[+] Successfully pushed %d events to C2. Clearing queue.\n", len(eventQueue))
