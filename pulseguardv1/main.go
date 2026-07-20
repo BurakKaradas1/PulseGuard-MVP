@@ -32,7 +32,7 @@ func main() {
 	checkers = append(checkers, &internal.RamChecker{Threshold: cfg.Thresholds.RAM})
 	checkers = append(checkers, &internal.DiskChecker{Threshold: cfg.Thresholds.Disk})
 
-	// 3. Ticker süresi YAML dosyasındaki değere göre dinamik başlatılır
+	// 3. Ticker süresi YAML dosyasındaki değere göre dinamik başlat
 	ticker := time.NewTicker(cfg.Agent.Interval)
 	defer ticker.Stop()
 
