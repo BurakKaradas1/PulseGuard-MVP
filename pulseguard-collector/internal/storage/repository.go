@@ -29,4 +29,8 @@ type Repository interface {
 	RegisterHost(hostID, hostname, ip, os string) error
 
 	GetHostByID(hostID string) (HostFullDetail, error)
+
+	IsBatchProcessed(signature string) bool
+
+	MarkBatchProcessed(signature string) error
 }

@@ -151,6 +151,14 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	//Eğer bu imza daha önce geldiyse, paketi tekrar işleme diyoruz
+	if s.repo.IsBatchProcessed(agentSignature) {
+		fmt.Println("[-] Idempotency: Bu paket daha önce işlendi, atlanıyor.")
+		w.WriteHeader(http.StatusOK) // Ajana "tamam aldım" diyoruz ki tekrar göndermeye çalışmasın
+		w.Write([]byte("Batch already processed"))
+		return
+	}
+
 	var events []storage.Event
 	err = json.NewDecoder(r.Body).Decode(&events)
 	if err != nil {
@@ -165,6 +173,8 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 			fmt.Printf("Failed to insert event: %v\n", err)
 		}
 	}
+
+	s.repo.MarkBatchProcessed(agentSignature)
 
 	fmt.Printf("[+] Successfully verified and stored %d events from agent.\n", len(events))
 	w.WriteHeader(http.StatusOK)

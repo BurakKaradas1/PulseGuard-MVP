@@ -70,6 +70,11 @@ func NewSQLiteRepository(dbPath string) (*SQLiteRepository, error) {
 	CREATE TABLE IF NOT EXISTS thresholds (
 		level TEXT PRIMARY KEY,
 		enabled BOOLEAN
+	);
+	
+	CREATE TABLE IF NOT EXISTS processed_batches (
+		signature TEXT PRIMARY KEY,
+		processed_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);`
 
 	_, err = db.Exec(schema)
@@ -172,14 +177,31 @@ func (r *SQLiteRepository) UpdateHostThreshold(hostID string, cpu int, ram int, 
 // Ajan ilk bağlandığında veya var olan ajan veri gönderdiğinde onu sisteme kaydeder
 func (r *SQLiteRepository) RegisterHost(hostID, hostname, ip, os string) error {
 	query := `
-		INSERT INTO hosts (id, hostname, ip_address, os, status, last_seen, max_cpu_usage, max_ram_usage, error_alert_limit)
-		VALUES (?, ?, ?, ?, 'healthy', CURRENT_TIMESTAMP, 80, 90, 5)
-		ON CONFLICT(id) DO UPDATE SET last_seen = CURRENT_TIMESTAMP;`
+		INSERT INTO hosts (id, hostname, ip_address, os, status, last_seen) 
+		VALUES (?, ?, ?, ?, 'healthy', CURRENT_TIMESTAMP)
+		ON CONFLICT(id) DO UPDATE SET 
+			hostname = excluded.hostname,
+			ip_address = excluded.ip_address,
+			os = excluded.os,
+			last_seen = CURRENT_TIMESTAMP;`
 
 	_, err := r.db.Exec(query, hostID, hostname, ip, os)
 	return err
 }
 
+func (r *SQLiteRepository) IsBatchProcessed(signature string) bool {
+	var count int
+	err := r.db.QueryRow("SELECT COUNT(*) FROM processed_batches WHERE signature = ?", signature).Scan(&count)
+	if err != nil {
+		return false
+	}
+	return count > 0
+}
+
+func (r *SQLiteRepository) MarkBatchProcessed(signature string) error {
+	_, err := r.db.Exec("INSERT INTO processed_batches (signature) VALUES (?)", signature)
+	return err
+}
 func (s *SQLiteRepository) Close() {
 	s.db.Close()
 }
