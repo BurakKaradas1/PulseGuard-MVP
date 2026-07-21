@@ -60,7 +60,7 @@ func (n *NetworkChecker) Name() string { return "C2 Network Status" }
 func (n *NetworkChecker) Check() Event {
 	targetURL := n.URL
 	if targetURL == "" {
-		targetURL = "https://google.com"
+		targetURL = "http://localhost:8080/api/v1/events"
 	}
 	client := http.Client{Timeout: 5 * time.Second}
 
