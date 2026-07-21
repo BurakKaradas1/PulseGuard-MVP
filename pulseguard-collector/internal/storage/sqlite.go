@@ -3,12 +3,39 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
 
+type HostFullDetail struct {
+	ID              string
+	Hostname        string
+	IPAddress       string
+	OS              string
+	Status          string
+	LastSeen        time.Time
+	MaxCpuUsage     int
+	MaxRamUsage     int
+	ErrorAlertLimit int
+}
 type SQLiteRepository struct {
 	db *sql.DB
+}
+
+// ID'si verilen hostun tüm bilgilerini SQLite'tan getirir
+func (r *SQLiteRepository) GetHostByID(hostID string) (HostFullDetail, error) {
+	var h HostFullDetail
+	query := `
+		SELECT id, hostname, ip_address, os, status, last_seen, max_cpu_usage, max_ram_usage, error_alert_limit 
+		FROM hosts 
+		WHERE id = ?`
+
+	err := r.db.QueryRow(query, hostID).Scan(
+		&h.ID, &h.Hostname, &h.IPAddress, &h.OS, &h.Status, &h.LastSeen,
+		&h.MaxCpuUsage, &h.MaxRamUsage, &h.ErrorAlertLimit,
+	)
+	return h, err
 }
 
 func NewSQLiteRepository(dbPath string) (*SQLiteRepository, error) {
@@ -21,7 +48,13 @@ func NewSQLiteRepository(dbPath string) (*SQLiteRepository, error) {
 	CREATE TABLE IF NOT EXISTS hosts (
 		id TEXT PRIMARY KEY,
 		hostname TEXT,
-		last_seen DATETIME
+		ip_address TEXT,
+		os TEXT,
+		status TEXT,
+		last_seen DATETIME,
+		max_cpu_usage INTEGER,
+		max_ram_usage INTEGER,
+		error_alert_limit INTEGER
 	);
 
 	CREATE TABLE IF NOT EXISTS events (
@@ -29,6 +62,7 @@ func NewSQLiteRepository(dbPath string) (*SQLiteRepository, error) {
 		host_id TEXT,
 		level TEXT,
 		message TEXT,
+		passed BOOLEAN,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		FOREIGN KEY(host_id) REFERENCES hosts(id)
 	);
@@ -79,15 +113,25 @@ func (s *SQLiteRepository) SaveEvent(level, message string, passed bool) error {
 	return err
 }
 
-func (r *SQLiteRepository) GetEvents(levelFilter string) ([]Event, error) {
-	query := "SELECT level, message FROM events"
+func (r *SQLiteRepository) GetEvents(levelFilter string, timeRange string) ([]Event, error) {
+	query := "SELECT level, message FROM events WHERE 1=1"
 	var args []interface{}
 
 	if levelFilter != "" {
-		query += " WHERE level = ?"
+		query += " AND level = ?"
 		args = append(args, levelFilter)
 	}
-
+	// Eğer zaman filtresi varsa sorguya ekle
+	if timeRange != "" {
+		duration, err := time.ParseDuration(timeRange)
+		if err == nil {
+			// Şu anki zamandan istenilen süreyi çıkararak bir başlangıç noktası bul
+			cutoffTime := time.Now().Add(-duration).UTC()
+			// Log kayıt tarihi bu başlangıç noktasından büyük/eşit olanlar
+			query += " AND created_at >= ?"
+			args = append(args, cutoffTime)
+		}
+	}
 	query += " ORDER BY created_at DESC LIMIT 100"
 
 	rows, err := r.db.Query(query, args...)
@@ -112,6 +156,28 @@ func (r *SQLiteRepository) GetEvents(levelFilter string) ([]Event, error) {
 	}
 
 	return events, nil
+}
+
+// Eşik ayarlarını SQLite'a kalıcı olarak kaydeder
+func (r *SQLiteRepository) UpdateHostThreshold(hostID string, cpu int, ram int, errLimit int) error {
+	query := `
+		UPDATE hosts 
+		SET max_cpu_usage = ?, max_ram_usage = ?, error_alert_limit = ? 
+		WHERE id = ?`
+
+	_, err := r.db.Exec(query, cpu, ram, errLimit, hostID)
+	return err
+}
+
+// Ajan ilk bağlandığında veya var olan ajan veri gönderdiğinde onu sisteme kaydeder
+func (r *SQLiteRepository) RegisterHost(hostID, hostname, ip, os string) error {
+	query := `
+		INSERT INTO hosts (id, hostname, ip_address, os, status, last_seen, max_cpu_usage, max_ram_usage, error_alert_limit)
+		VALUES (?, ?, ?, ?, 'healthy', CURRENT_TIMESTAMP, 80, 90, 5)
+		ON CONFLICT(id) DO UPDATE SET last_seen = CURRENT_TIMESTAMP;`
+
+	_, err := r.db.Exec(query, hostID, hostname, ip, os)
+	return err
 }
 
 func (s *SQLiteRepository) Close() {

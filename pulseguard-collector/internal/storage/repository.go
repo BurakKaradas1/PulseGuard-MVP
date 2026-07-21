@@ -20,7 +20,13 @@ type Repository interface {
 	SaveEvent(level, message string, passed bool) error
 
 	//Dashboard için filreleme
-	GetEvents(levelFilter string) ([]Event, error)
+	GetEvents(levelFilter string, timeRange string) ([]Event, error)
 
 	GetHosts() ([]Host, error)
+
+	UpdateHostThreshold(hostID string, cpu int, ram int, errLimit int) error
+
+	RegisterHost(hostID, hostname, ip, os string) error
+
+	GetHostByID(hostID string) (HostFullDetail, error)
 }
