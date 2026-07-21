@@ -20,6 +20,24 @@ func logRequest(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+// CORS Middleware
+func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Geliştirme ortamı için "*" bırakılabilir veya spesifik React portu yazılabilir.
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-PulseGuard-Signature")
+
+		// Preflight (OPTIONS) isteğine doğrudan 200 OK dön
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next(w, r)
+	}
+}
+
 func main() {
 	// 1. Veritabanı katmanını başlat
 	repo, err := storage.NewSQLiteRepository("./pulseguard.db")
@@ -35,12 +53,12 @@ func main() {
 	apiServer := api.NewAPIServer(repo, secretKey)
 
 	// 3. REST API Uç Noktaları
-	http.HandleFunc("/api/v1/events", logRequest(apiServer.HandleReceiveEvents))                   // Ajan girişi
-	http.HandleFunc("/api/v1/dashboard/hosts", logRequest(apiServer.HandleGetHosts))               // Filo görünümü
-	http.HandleFunc("/api/v1/dashboard/events", logRequest(apiServer.HandleGetEvents))             // Zaman çizelgesi
-	http.HandleFunc("/api/v1/dashboard/hosts/detail", logRequest(apiServer.HandleGetHostDetail))   // GET
-	http.HandleFunc("/api/v1/dashboard/hosts/threshold", logRequest(apiServer.HandleSetThreshold)) // POST
-	http.HandleFunc("/api/v1/agent/register", logRequest(apiServer.HandleRegisterHost))
+	http.HandleFunc("/api/v1/events", corsMiddleware(logRequest(apiServer.HandleReceiveEvents)))
+	http.HandleFunc("/api/v1/dashboard/hosts", corsMiddleware(logRequest(apiServer.HandleGetHosts)))
+	http.HandleFunc("/api/v1/dashboard/events", corsMiddleware(logRequest(apiServer.HandleGetEvents)))
+	http.HandleFunc("/api/v1/dashboard/hosts/detail", corsMiddleware(logRequest(apiServer.HandleGetHostDetail)))
+	http.HandleFunc("/api/v1/dashboard/hosts/threshold", corsMiddleware(logRequest(apiServer.HandleSetThreshold)))
+	http.HandleFunc("/api/v1/agent/register", corsMiddleware(logRequest(apiServer.HandleRegisterHost)))
 	// 4. Sunucuyu ayağa kaldır
 	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
