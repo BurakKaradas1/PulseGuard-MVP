@@ -14,6 +14,12 @@ func main() {
 		log.Fatalf("[-] Failed to load configuration: %v", err)
 	}
 
+	fmt.Println("[*] Registering agent to Collector...")
+	err = internal.RegisterAgent(cfg.Agent.CollectorURL)
+	if err != nil {
+		log.Fatalf("[-] Ajan kaydı başarısız oldu: %v", err)
+	}
+
 	var checkers []internal.Checker
 
 	if cfg.Checks.SystemIntegrity {
@@ -58,7 +64,8 @@ func main() {
 		}
 
 		//Kuyruktaki tüm verileri C2 sunucusuna toplu olarak gönder
-		err := internal.SendBatch(eventQueue, cfg.Agent.CollectorURL)
+		eventsURL := cfg.Agent.CollectorURL + "/api/v1/events"
+		err := internal.SendBatch(eventQueue, eventsURL)
 
 		if err != nil {
 			fmt.Printf("[!] Failed to push events to C2. Hata Detayı: %v | Current queue size: %d\n", err, len(eventQueue))
