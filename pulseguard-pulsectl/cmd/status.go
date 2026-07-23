@@ -25,7 +25,7 @@ var statusCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("[+] Connecting to PulseGuard API...")
 
-		apiURL := "http://localhost:8080/api/v1/dashboard/hosts"
+		apiURL := serverURL + "/api/v1/dashboard/hosts"
 
 		// client burada tanımlandı
 		client := http.Client{Timeout: 5 * time.Second}

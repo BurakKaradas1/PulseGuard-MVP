@@ -31,7 +31,7 @@ var reportCmd = &cobra.Command{
 	Short: "Generate a summary system report",
 	Long:  `Connects to the PulseGuard REST API, analyzes real-time system metrics, and outputs a formatted summary report.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		apiURL := "http://localhost:8080/api/v1/dashboard/hosts"
+		apiURL := serverURL + "/api/v1/dashboard/hosts"
 
 		client := http.Client{Timeout: 5 * time.Second}
 		resp, err := client.Get(apiURL)
