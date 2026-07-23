@@ -6,13 +6,11 @@ import (
 	"net/http"
 
 	"pulseguard-collector/internal/api"
+	"pulseguard-collector/internal/config"
 	"pulseguard-collector/internal/storage"
 )
 
-// İleride konfigürasyon dosyasından (YAML/ENV) okunacak
-const secretKey = "super-secret-pulseguard-key"
-
-// logRequest middleware'i, gelen her isteği terminale yazar
+// logRequest middleware logs incoming requests to the terminal
 func logRequest(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("[DEBUG] Incoming Request: %s %s\n", r.Method, r.URL.Path)
@@ -23,12 +21,12 @@ func logRequest(next http.HandlerFunc) http.HandlerFunc {
 // CORS Middleware
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Geliştirme ortamı için "*" bırakılabilir veya spesifik React portu yazılabilir.
+		// Can be left as "*" for development or set to a specific React port.
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-PulseGuard-Signature")
 
-		// Preflight (OPTIONS) isteğine doğrudan 200 OK dön
+		// Return 200 OK directly for Preflight (OPTIONS) requests
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
 			return
@@ -39,29 +37,36 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
-	// 1. Veritabanı katmanını başlat
-	repo, err := storage.NewSQLiteRepository("./pulseguard.db")
+	// 1. Load configuration (Fails safely if the environment variable is missing)
+	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Fatal("[-] Failed to start server: ", err)
+	}
+
+	// 2. Initialize database layer
+	repo, err := storage.NewSQLiteRepository(cfg.DBPath)
+	if err != nil {
+		log.Fatal("[-] Database connection error: ", err)
 	}
 
 	fmt.Println("[+] SQLite Database initialized successfully.")
-	fmt.Println("PulseGuard C2 Server (Collector) Starting...")
-	fmt.Println("Listening on port 8080 (SQLite active...)")
+	fmt.Println("[+] PulseGuard C2 Server (Collector) Starting...")
 
-	// 2. API Server örneğini oluştur (Interface ve SecretKey'i enjekte et)
-	apiServer := api.NewAPIServer(repo, secretKey)
+	// 3. Create API Server instance (Inject Interface and SecretKey)
+	apiServer := api.NewAPIServer(repo, cfg.SecretKey)
 
-	// 3. REST API Uç Noktaları
+	// 4. REST API Endpoints
 	http.HandleFunc("/api/v1/events", corsMiddleware(logRequest(apiServer.HandleReceiveEvents)))
 	http.HandleFunc("/api/v1/dashboard/hosts", corsMiddleware(logRequest(apiServer.HandleGetHosts)))
 	http.HandleFunc("/api/v1/dashboard/events", corsMiddleware(logRequest(apiServer.HandleGetEvents)))
 	http.HandleFunc("/api/v1/dashboard/hosts/detail", corsMiddleware(logRequest(apiServer.HandleGetHostDetail)))
 	http.HandleFunc("/api/v1/dashboard/hosts/threshold", corsMiddleware(logRequest(apiServer.HandleSetThreshold)))
 	http.HandleFunc("/api/v1/agent/register", corsMiddleware(logRequest(apiServer.HandleRegisterHost)))
-	// 4. Sunucuyu ayağa kaldır
-	err = http.ListenAndServe(":8080", nil)
+
+	// 5. Start the server
+	fmt.Printf("[+] Listening on port %s (SQLite active...)\n", cfg.Port)
+	err = http.ListenAndServe(cfg.Port, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("[-] Server failed: ", err)
 	}
 }

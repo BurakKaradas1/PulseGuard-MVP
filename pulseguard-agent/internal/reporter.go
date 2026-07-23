@@ -14,8 +14,6 @@ import (
 	"time"
 )
 
-const secretKey = "super-secret-pulseguard-key"
-
 // Veriyi gizli anahtarla şifrelediğimiz yer
 func generateSignature(payload []byte, secret string) string {
 	h := hmac.New(sha256.New, []byte(secret))
@@ -85,15 +83,20 @@ func SendBatch(events []Event, fullURL string) error {
 		return nil
 	}
 
+	// 1. Ortam değişkeninden gizli anahtarı oku (İngilizce hata mesajı ile)
+	secretKey := os.Getenv("PULSEGUARD_SECRET")
+	if secretKey == "" {
+		return fmt.Errorf("PULSEGUARD_SECRET environment variable is not defined, data transmission aborted")
+	}
+
 	data, err := json.Marshal(events)
 	if err != nil {
 		return err
 	}
 
-	//Verinin dijital mührü
+	// 2. Şifreleme işlemini dinamik anahtarla yap
 	signature := generateSignature(data, secretKey)
 
-	//Özel HTTP başlıkları ekleyebilmek için yeni Request
 	req, err := http.NewRequest("POST", fullURL, bytes.NewBuffer(data))
 	if err != nil {
 		return err
