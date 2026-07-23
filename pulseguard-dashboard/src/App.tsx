@@ -24,34 +24,48 @@ export function App() {
   const API_BASE_URL = ''; 
 
   useEffect(() => {
-    const fetchHosts = async () => {
+    let isMounted = true;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const fetchHostsSafely = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/hosts`);
         if (!response.ok) throw new Error("Ağ hatası");
         const data = await response.json();
-        setHosts(data || []);
-        setApiStatus("connected");
+        
+        if (isMounted) {
+          setHosts(data || []);
+          setApiStatus("connected");
 
-        if (selectedHost) {
-          const currentUpdatedHost = data.find((h: HostStatus) => h.id === selectedHost.id);
-          if (currentUpdatedHost) {
-            const nowTime = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            setCpuHistory(prev => [
-              ...prev.slice(-6),
-              { time: nowTime, cpu: currentUpdatedHost.cpu_usage || 0 }
-            ]);
+          if (selectedHost) {
+            const currentUpdatedHost = data.find((h: HostStatus) => h.id === selectedHost.id);
+            if (currentUpdatedHost) {
+              const nowTime = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+              setCpuHistory(prev => [
+                ...prev.slice(-6),
+                { time: nowTime, cpu: currentUpdatedHost.cpu_usage || 0 }
+              ]);
+            }
           }
         }
       } catch (error) {
-        setApiStatus("disconnected");
-        setHosts([]);
+        if (isMounted) {
+          setApiStatus("disconnected");
+          setHosts([]);
+        }
+      } finally {
+        if (isMounted) {
+          timeoutId = setTimeout(fetchHostsSafely, refreshRate);
+        }
       }
     };
 
-    fetchHosts();
-    // 5000 yerine refreshRate state'ini kullanıyoruz
-    const pollingInterval = setInterval(fetchHosts, refreshRate);
-    return () => clearInterval(pollingInterval);
+    fetchHostsSafely();
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
   }, [selectedHost?.id, refreshRate]);
 
   const handleHostClick = async (hostId: string) => {
