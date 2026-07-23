@@ -3,9 +3,9 @@ package storage
 import (
 	"database/sql"
 	"fmt"
-	"strings"
 	"time"
 
+	"github.com/Masterminds/squirrel"
 	_ "modernc.org/sqlite"
 )
 
@@ -177,33 +177,38 @@ func (r *SQLiteRepository) GetEvents(levelFilter string, timeRange string) ([]Ev
 
 // UpdateHostMetricsFromLog dynamically updates host metrics based on parsed log data
 func (r *SQLiteRepository) UpdateHostMetricsFromLog(hostname string, cpu, ram, disk *int) error {
-	var setClauses []string
-	var args []interface{}
-
-	if cpu != nil {
-		setClauses = append(setClauses, "cpu_usage = ?")
-		args = append(args, *cpu)
-	}
-	if ram != nil {
-		setClauses = append(setClauses, "ram_usage = ?")
-		args = append(args, *ram)
-	}
-	if disk != nil {
-		setClauses = append(setClauses, "disk_usage = ?")
-		args = append(args, *disk)
-	}
-
-	if len(setClauses) == 0 {
+	// Eğer güncellenecek hiçbir metrik yoksa boşa işlem yapma
+	if cpu == nil && ram == nil && disk == nil {
 		return nil
 	}
 
-	args = append(args, hostname)
-	query := fmt.Sprintf("UPDATE hosts SET %s WHERE hostname = ? OR id LIKE ?", strings.Join(setClauses, ", "))
+	// Squirrel ile UPDATE sorgusunu inşa etmeye başlıyoruz
+	builder := squirrel.Update("hosts")
 
-	// Agent ID is usually in "hostname-agent" format, so we check both possibilities
-	args = append(args, hostname+"-agent")
+	if cpu != nil {
+		builder = builder.Set("cpu_usage", *cpu)
+	}
+	if ram != nil {
+		builder = builder.Set("ram_usage", *ram)
+	}
+	if disk != nil {
+		builder = builder.Set("disk_usage", *disk)
+	}
 
-	_, err := r.db.Exec(query, args...)
+	// WHERE şartlarını OR mantığıyla ekliyoruz
+	builder = builder.Where(squirrel.Or{
+		squirrel.Eq{"hostname": hostname},
+		squirrel.Like{"id": hostname + "-agent"},
+	})
+
+	// Sorguyu ve argümanları güvenli bir şekilde derle
+	query, args, err := builder.ToSql()
+	if err != nil {
+		return fmt.Errorf("failed to build SQL query: %v", err)
+	}
+
+	// Derlenen sorguyu veritabanında çalıştır
+	_, err = r.db.Exec(query, args...)
 	return err
 }
 
