@@ -82,7 +82,7 @@ func RemoveProcessedEvents(processedCount int) error {
 		}
 	}
 
-	// LİNTER DÜZELTMESİ: Okuma bittikten sonra hata var mı diye kontrol ediyoruz
+	// Okuma bittikten sonra hata var mı diye kontrol ediyoruz
 	if err := scanner.Err(); err != nil {
 		file.Close()
 		return err
