@@ -9,6 +9,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	"pulseguard-collector/internal/storage"
@@ -17,6 +20,7 @@ import (
 type ThresholdConfig struct {
 	MaxCpuUsage     int `json:"max_cpu_usage"`
 	MaxRamUsage     int `json:"max_ram_usage"`
+	MaxDiskUsage    int `json:"max_disk_usage"`
 	ErrorAlertLimit int `json:"error_alert_limit"`
 }
 
@@ -65,6 +69,7 @@ func (s *APIServer) HandleGetHostDetail(w http.ResponseWriter, r *http.Request) 
 		Threshold: ThresholdConfig{
 			MaxCpuUsage:     hostData.MaxCpuUsage,
 			MaxRamUsage:     hostData.MaxRamUsage,
+			MaxDiskUsage:    hostData.MaxDiskUsage,
 			ErrorAlertLimit: hostData.ErrorAlertLimit,
 		},
 	}
@@ -97,6 +102,7 @@ func (s *APIServer) HandleSetThreshold(w http.ResponseWriter, r *http.Request) {
 		hostID,
 		newConfig.MaxCpuUsage,
 		newConfig.MaxRamUsage,
+		newConfig.MaxDiskUsage,
 		newConfig.ErrorAlertLimit,
 	)
 
@@ -106,7 +112,7 @@ func (s *APIServer) HandleSetThreshold(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("[+] Threshold updated for host %s: CPU:%d%% RAM:%d%%\n", hostID, newConfig.MaxCpuUsage, newConfig.MaxRamUsage)
+	fmt.Printf("[+] Threshold updated for host %s: CPU:%d%% RAM:%d%% DISK:%d%%\n", hostID, newConfig.MaxCpuUsage, newConfig.MaxRamUsage, newConfig.MaxDiskUsage)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Threshold configuration saved successfully"))
@@ -166,26 +172,60 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// İstekte bulunan ajanın hostname bilgisini yakalayabilmek için header veya payload analizi yapılabilir.
+	// Şimdilik gelen event mesajlarındaki metin kalıplarından metrikleri yakalıyoruz.
+	var latestCpu, latestRam, latestDisk *int
+
 	for _, event := range events {
-		// Global repo yerine yapı içindeki s.repo arayüzünü kullanıyoruz
 		err = s.repo.SaveEvent(event.Level, event.Message, event.Passed)
 		if err != nil {
 			fmt.Printf("Failed to insert event: %v\n", err)
+		}
+
+		// YENİ: Log mesajlarını analiz ederek anlık metrikleri yakala
+		msgLower := strings.ToLower(event.Message)
+		if strings.Contains(msgLower, "cpu") {
+			if val, ok := parseMetricValue(event.Message); ok {
+				latestCpu = &val
+			}
+		} else if strings.Contains(msgLower, "ram") {
+			if val, ok := parseMetricValue(event.Message); ok {
+				latestRam = &val
+			}
+		} else if strings.Contains(msgLower, "disk") {
+			if val, ok := parseMetricValue(event.Message); ok {
+				latestDisk = &val
+			}
+		}
+	}
+
+	// Eğer bu batch içinde metrik verisi geçtiyse, host tablosunu güncelle
+	// Not: Ajan ID'sini payload üzerinden de taşıyabilirsin ama hostname bazlı güncelleme pratiktir.
+	if latestCpu != nil || latestRam != nil || latestDisk != nil {
+		// Ajan ID formatı `hostname-agent` olduğundan veya doğrudan hostname ile eşleştiği için güncellenir
+		// Ajanın Hostname bilgisini event isteğiyle eşleştirmek için event yapısına host_id ekleyebilirsin
+		// Şimdilik tabloda kayıtlı olan hostları güncelliyoruz:
+		hosts, _ := s.repo.GetHosts()
+		for _, h := range hosts {
+			_ = s.repo.UpdateHostMetricsFromLog(h.Hostname, latestCpu, latestRam, latestDisk)
 		}
 	}
 
 	s.repo.MarkBatchProcessed(agentSignature)
 
-	fmt.Printf("[+] Successfully verified and stored %d events from agent.\n", len(events))
+	fmt.Printf("[+] Successfully verified and stored %d events from agent and updated metrics.\n", len(events))
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Batch processed successfully"))
 }
 
 type HostStatus struct {
-	ID       string    `json:"id"`
-	Hostname string    `json:"hostname"`
-	Status   string    `json:"status"`
-	LastSeen time.Time `json:"last_seen"`
+	ID        string    `json:"id"`
+	Hostname  string    `json:"hostname"`
+	Status    string    `json:"status"`
+	LastSeen  time.Time `json:"last_seen"`
+	CpuUsage  int       `json:"cpu_usage"`
+	RamUsage  int       `json:"ram_usage"`
+	DiskUsage int       `json:"disk_usage"`
 }
 
 // Filo görünümü
@@ -204,10 +244,13 @@ func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 	var hosts []HostStatus
 	for _, h := range dbHosts {
 		hosts = append(hosts, HostStatus{
-			ID:       h.ID,
-			Hostname: h.Hostname,
-			Status:   "healthy", // Şimdilik varsayılan atıyoruz, ileride eklenebilir
-			LastSeen: h.LastSeen,
+			ID:        h.ID,
+			Hostname:  h.Hostname,
+			Status:    "healthy", // Şimdilik varsayılan atıyoruz, ileride eklenebilir
+			LastSeen:  h.LastSeen,
+			CpuUsage:  h.CpuUsage,
+			RamUsage:  h.RamUsage,
+			DiskUsage: h.DiskUsage,
 		})
 	}
 
@@ -273,4 +316,16 @@ func (s *APIServer) HandleRegisterHost(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("[+] YENİ AJAN KAYDEDİLDİ: %s (%s)\n", req.Hostname, req.IP)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Host registered successfully to PulseGuard"))
+}
+
+func parseMetricValue(message string) (int, bool) {
+	re := regexp.MustCompile(`(\d+)%`)
+	match := re.FindStringSubmatch(message)
+	if len(match) > 1 {
+		val, err := strconv.Atoi(match[1])
+		if err == nil {
+			return val, true
+		}
+	}
+	return 0, false
 }
