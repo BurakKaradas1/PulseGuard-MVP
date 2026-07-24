@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var outputJSON bool
+
 // Herhangi bir alt komut girilmediğinde çalışır
 var rootCmd = &cobra.Command{
 	Use:   "pulsectl",
@@ -27,5 +29,5 @@ func Execute() {
 }
 
 func init() {
-
+	rootCmd.PersistentFlags().BoolVarP(&outputJSON, "json", "j", false, "Output results in machine-readable JSON format")
 }

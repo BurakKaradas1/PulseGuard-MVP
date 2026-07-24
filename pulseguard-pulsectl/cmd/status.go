@@ -56,6 +56,12 @@ var statusCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		// Eğer kullanıcı --json bayrağını verdiyse, tabloyla uğraşmadan ham JSON'ı bas ve çık
+		if outputJSON {
+			fmt.Println(string(body))
+			return
+		}
+
 		fmt.Println("---------------------------------------------------------")
 		fmt.Printf("%-20s %-15s %-20s\n", "HOSTNAME", "STATUS", "LAST SEEN")
 		fmt.Println("---------------------------------------------------------")

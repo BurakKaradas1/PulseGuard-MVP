@@ -11,11 +11,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// HostStats struct, API'den dönecek verileri eşlemek için kullanılır
 type HostStats struct {
 	ID       string `json:"id"`
 	Hostname string `json:"hostname"`
 	Status   string `json:"status"`
+}
+
+// Makine-okur rapor struct yapısı
+type SystemReportJSON struct {
+	GeneratedAt   string `json:"generated_at"`
+	TotalAgents   int    `json:"total_agents"`
+	OnlineAgents  int    `json:"online_agents"`
+	OfflineAgents int    `json:"offline_agents"`
+	StatusSummary string `json:"status_summary"`
 }
 
 var reportCmd = &cobra.Command{
@@ -23,8 +31,6 @@ var reportCmd = &cobra.Command{
 	Short: "Generate a summary system report",
 	Long:  `Connects to the PulseGuard REST API, analyzes real-time system metrics, and outputs a formatted summary report.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("[+] Fetching system metrics from PulseGuard API...")
-
 		apiURL := "http://localhost:8080/api/v1/dashboard/hosts"
 
 		client := http.Client{Timeout: 5 * time.Second}
@@ -52,7 +58,6 @@ var reportCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		// Metrikleri Hesaplama
 		totalHosts := len(hosts)
 		onlineCount := 0
 		offlineCount := 0
@@ -65,7 +70,28 @@ var reportCmd = &cobra.Command{
 			}
 		}
 
-		// Profesyonel Rapor Çıktısı
+		summary := "HEALTHY - All systems operational."
+		if offlineCount > 0 {
+			summary = "WARNING - Some agents are down!"
+		} else if totalHosts == 0 {
+			summary = "IDLE - No agents connected yet."
+		}
+
+		// Eğer --json istentiyse, makine-okur formatta struct'ı JSON'a çevirip bas
+		if outputJSON {
+			reportData := SystemReportJSON{
+				GeneratedAt:   time.Now().Format("2006-01-02 15:04:05"),
+				TotalAgents:   totalHosts,
+				OnlineAgents:  onlineCount,
+				OfflineAgents: offlineCount,
+				StatusSummary: summary,
+			}
+			jsonOutput, _ := json.MarshalIndent(reportData, "", "  ")
+			fmt.Println(string(jsonOutput))
+			return
+		}
+
+		// İnsan-okur tablo/metin çıktısı
 		fmt.Println("=========================================================")
 		fmt.Println("             PULSEGUARD SYSTEM HEALTH REPORT             ")
 		fmt.Println("=========================================================")
@@ -75,14 +101,7 @@ var reportCmd = &cobra.Command{
 		fmt.Printf(" Online Agents           : %d [OK]\n", onlineCount)
 		fmt.Printf(" Offline Agents          : %d [ALERT]\n", offlineCount)
 		fmt.Println("---------------------------------------------------------")
-
-		if offlineCount > 0 {
-			fmt.Println(" Status Summary          : WARNING - Some agents are down!")
-		} else if totalHosts == 0 {
-			fmt.Println(" Status Summary          : IDLE - No agents connected yet.")
-		} else {
-			fmt.Println(" Status Summary          : HEALTHY - All systems operational.")
-		}
+		fmt.Printf(" Status Summary          : %s\n", summary)
 		fmt.Println("=========================================================")
 	},
 }
