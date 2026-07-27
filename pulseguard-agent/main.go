@@ -33,19 +33,16 @@ func main() {
 		checkers = append(checkers, &internal.NetworkChecker{URL: cfg.Agent.CollectorURL})
 	}
 
-	// Hardware Checkers with YAML thresholds
+	// Hardware checkerlar
 	checkers = append(checkers, &internal.CpuChecker{Threshold: cfg.Thresholds.CPU})
 	checkers = append(checkers, &internal.RamChecker{Threshold: cfg.Thresholds.RAM})
 	checkers = append(checkers, &internal.DiskChecker{Threshold: cfg.Thresholds.Disk})
 
-	// 3. Ticker süresi YAML dosyasındaki değere göre dinamik başlat
+	// Ticker süresi YAML dosyasındaki değere göre dinamik başlat
 	ticker := time.NewTicker(cfg.Agent.Interval)
 	defer ticker.Stop()
 
 	fmt.Printf("[+] PulseGuard Agent started. Monitoring every %s...\n", cfg.Agent.Interval)
-
-	//Kuyruk
-	var eventQueue []internal.Event
 
 	for {
 		<-ticker.C
@@ -54,7 +51,12 @@ func main() {
 		//Tüm sensörleri çalıştır kuyruğa at
 		for _, c := range checkers {
 			result := c.Check()
-			eventQueue = append(eventQueue, result)
+
+			// YENİ: RAM'e append etmek yerine diske yazıyoruz
+			err := internal.EnqueueEvent(result)
+			if err != nil {
+				fmt.Printf("[!] Disk yazma hatası: %v\n", err)
+			}
 
 			status := "[OK]"
 			if !result.Passed {
@@ -63,16 +65,22 @@ func main() {
 			fmt.Printf("[%s] %s %s: %s\n", result.Level, status, c.Name(), result.Message)
 		}
 
-		//Kuyruktaki tüm verileri C2 sunucusuna toplu olarak gönder
-		eventsURL := cfg.Agent.CollectorURL + "/api/v1/events"
-		err := internal.SendBatch(eventQueue, eventsURL)
+		// Diskte biriken tüm verileri oku
+		queuedEvents, _ := internal.DequeueAll()
 
-		if err != nil {
-			fmt.Printf("[!] Failed to push events to C2. Hata Detayı: %v | Current queue size: %d\n", err, len(eventQueue))
-		} else {
-			// Gönderim başarılı olursa kuyruğu boşalt
-			fmt.Printf("[+] Successfully pushed %d events to C2. Clearing queue.\n", len(eventQueue))
-			eventQueue = nil
+		if len(queuedEvents) > 0 {
+			eventsURL := cfg.Agent.CollectorURL + "/api/v1/events"
+
+			// C2 sunucusuna toplu olarak gönder
+			err := internal.SendBatch(queuedEvents, eventsURL)
+
+			if err != nil {
+				fmt.Printf("[!] Failed to push events to C2. Veriler diskte (WAL) güvende. | Current queue size: %d\n", len(queuedEvents))
+			} else {
+				// Gönderim başarılı olursa diskteki kuyruk dosyasını sil
+				fmt.Printf("[+] Successfully pushed %d events to C2. Clearing WAL disk queue.\n", len(queuedEvents))
+				internal.ClearQueue()
+			}
 		}
 	}
 }
