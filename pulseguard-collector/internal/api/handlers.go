@@ -36,7 +36,7 @@ type APIServer struct {
 	secretKey string
 }
 
-// 1. Belirli bir hostun detaylarını getirir (GET)
+// 1. Get details of a specific host (GET)
 func (s *APIServer) HandleGetHostDetail(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -49,14 +49,12 @@ func (s *APIServer) HandleGetHostDetail(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// Veritabanından gerçek veriyi çek
 	hostData, err := s.repo.GetHostByID(hostID)
 	if err != nil {
-		http.Error(w, "Host bulunamadı veya henüz sisteme kayıt olmadı", http.StatusNotFound)
+		http.Error(w, "Host not found or not registered yet", http.StatusNotFound)
 		return
 	}
 
-	// Gelen ham veriyi JSON formatına oturt
 	detail := HostDetail{
 		HostStatus: HostStatus{
 			ID:       hostData.ID,
@@ -78,7 +76,7 @@ func (s *APIServer) HandleGetHostDetail(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode(detail)
 }
 
-// 2. Bir host için yeni alarm eşikleri (Threshold) belirler (POST)
+// 2. Set new alarm thresholds for a host (POST)
 func (s *APIServer) HandleSetThreshold(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -91,7 +89,6 @@ func (s *APIServer) HandleSetThreshold(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// React'ten gelen yeni ayarları JSON olarak oku
 	var newConfig ThresholdConfig
 	err := json.NewDecoder(r.Body).Decode(&newConfig)
 	if err != nil {
@@ -107,8 +104,8 @@ func (s *APIServer) HandleSetThreshold(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		fmt.Printf("[!] Veritabanı Hatası (UpdateThreshold): %v\n", err)
-		http.Error(w, "Veritabanına kaydedilemedi", http.StatusInternalServerError)
+		fmt.Printf("[!] Database Error (UpdateThreshold): %v\n", err)
+		http.Error(w, "Failed to save to database", http.StatusInternalServerError)
 		return
 	}
 
@@ -157,10 +154,12 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	//Eğer bu imza daha önce geldiyse, paketi tekrar işleme diyoruz
-	if s.repo.IsBatchProcessed(agentSignature) {
-		fmt.Println("[-] Idempotency: Bu paket daha önce işlendi, atlanıyor.")
-		w.WriteHeader(http.StatusOK) // Ajana "tamam aldım" diyoruz ki tekrar göndermeye çalışmasın
+	// Idempotency & Race Condition Prevention:
+	// Attempt to insert signature directly into processed_batches using DB UNIQUE constraint.
+	err = s.repo.MarkBatchProcessed(agentSignature)
+	if err != nil {
+		fmt.Println("[-] Idempotency: This batch has already been processed (Race Condition prevented), skipping.")
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Batch already processed"))
 		return
 	}
@@ -172,8 +171,6 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// İstekte bulunan ajanın hostname bilgisini yakalayabilmek için header veya payload analizi yapılabilir.
-	// Şimdilik gelen event mesajlarındaki metin kalıplarından metrikleri yakalıyoruz.
 	var latestCpu, latestRam, latestDisk *int
 
 	for _, event := range events {
@@ -182,7 +179,6 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 			fmt.Printf("Failed to insert event: %v\n", err)
 		}
 
-		// YENİ: Log mesajlarını analiz ederek anlık metrikleri yakala
 		msgLower := strings.ToLower(event.Message)
 		if strings.Contains(msgLower, "cpu") {
 			if val, ok := parseMetricValue(event.Message); ok {
@@ -199,19 +195,12 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 		}
 	}
 
-	// Eğer bu batch içinde metrik verisi geçtiyse, host tablosunu güncelle
-	// Not: Ajan ID'sini payload üzerinden de taşıyabilirsin ama hostname bazlı güncelleme pratiktir.
 	if latestCpu != nil || latestRam != nil || latestDisk != nil {
-		// Ajan ID formatı `hostname-agent` olduğundan veya doğrudan hostname ile eşleştiği için güncellenir
-		// Ajanın Hostname bilgisini event isteğiyle eşleştirmek için event yapısına host_id ekleyebilirsin
-		// Şimdilik tabloda kayıtlı olan hostları güncelliyoruz:
 		hosts, _ := s.repo.GetHosts()
 		for _, h := range hosts {
 			_ = s.repo.UpdateHostMetricsFromLog(h.Hostname, latestCpu, latestRam, latestDisk)
 		}
 	}
-
-	s.repo.MarkBatchProcessed(agentSignature)
 
 	fmt.Printf("[+] Successfully verified and stored %d events from agent and updated metrics.\n", len(events))
 	w.WriteHeader(http.StatusOK)
@@ -228,7 +217,7 @@ type HostStatus struct {
 	DiskUsage int       `json:"disk_usage"`
 }
 
-// Filo görünümü
+// Fleet view
 func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -237,7 +226,7 @@ func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 
 	dbHosts, err := s.repo.GetHosts()
 	if err != nil {
-		http.Error(w, "Veritabanından hostlar okunamadı", http.StatusInternalServerError)
+		http.Error(w, "Failed to read hosts from database", http.StatusInternalServerError)
 		return
 	}
 
@@ -246,7 +235,7 @@ func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 		hosts = append(hosts, HostStatus{
 			ID:        h.ID,
 			Hostname:  h.Hostname,
-			Status:    "healthy", // Şimdilik varsayılan atıyoruz, ileride eklenebilir
+			Status:    "healthy",
 			LastSeen:  h.LastSeen,
 			CpuUsage:  h.CpuUsage,
 			RamUsage:  h.RamUsage,
@@ -262,20 +251,18 @@ func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(hosts)
 }
 
-// Zaman ve raporlar için filtrelenmiş etkinlikleri döndürür
+// Returns filtered events for time and reports
 func (s *APIServer) HandleGetEvents(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Read filters from the URL query parameters
-	levelFilter := r.URL.Query().Get("level") // "ERROR", "WARNING"
+	levelFilter := r.URL.Query().Get("level")
 	timeRange := r.URL.Query().Get("range")
-	// Real implementation will pass levelFilter to the database query
 	events, err := s.repo.GetEvents(levelFilter, timeRange)
 	if err != nil {
-		fmt.Printf("[!] Veritabanı Hatası (GetEvents): %v\n", err)
+		fmt.Printf("[!] Database Error (GetEvents): %v\n", err)
 		http.Error(w, "Failed to fetch events", http.StatusInternalServerError)
 		return
 	}
@@ -284,14 +271,13 @@ func (s *APIServer) HandleGetEvents(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(events)
 }
 
-// 3. Ajanın sisteme ilk bağlandığında kendini kaydetmesini sağlar (POST)
+// 3. Registers the agent when it first connects (POST)
 func (s *APIServer) HandleRegisterHost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Ajandan gelecek olan JSON paketinin yapısı
 	var req struct {
 		ID       string `json:"id"`
 		Hostname string `json:"hostname"`
@@ -299,21 +285,19 @@ func (s *APIServer) HandleRegisterHost(w http.ResponseWriter, r *http.Request) {
 		OS       string `json:"os"`
 	}
 
-	// Gelen veriyi oku
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
 		return
 	}
 
-	// Veritabanına kaydet (Geçmişte storage tarafında yazdığımız fonksiyonu çağırıyoruz)
 	err := s.repo.RegisterHost(req.ID, req.Hostname, req.IP, req.OS)
 	if err != nil {
-		fmt.Printf("[!] Veritabanı Hatası (RegisterHost): %v\n", err)
-		http.Error(w, "Veritabanına kaydedilemedi", http.StatusInternalServerError)
+		fmt.Printf("[!] Database Error (RegisterHost): %v\n", err)
+		http.Error(w, "Failed to save to database", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Printf("[+] YENİ AJAN KAYDEDİLDİ: %s (%s)\n", req.Hostname, req.IP)
+	fmt.Printf("[+] NEW AGENT REGISTERED: %s (%s)\n", req.Hostname, req.IP)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Host registered successfully to PulseGuard"))
 }

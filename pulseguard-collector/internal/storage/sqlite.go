@@ -21,17 +21,18 @@ type HostFullDetail struct {
 	MaxDiskUsage    int
 	ErrorAlertLimit int
 }
+
 type SQLiteRepository struct {
 	db *sql.DB
 }
 
-// ID'si verilen hostun tüm bilgilerini SQLite'tan getirir
+// GetHostByID retrieves all details of a specific host from SQLite
 func (r *SQLiteRepository) GetHostByID(hostID string) (HostFullDetail, error) {
 	var h HostFullDetail
 	query := `
-        SELECT id, hostname, ip_address, os, status, last_seen, max_cpu_usage, max_ram_usage, max_disk_usage, error_alert_limit 
-        FROM hosts 
-        WHERE id = ?`
+		SELECT id, hostname, ip_address, os, status, last_seen, max_cpu_usage, max_ram_usage, max_disk_usage, error_alert_limit 
+		FROM hosts 
+		WHERE id = ?`
 
 	err := r.db.QueryRow(query, hostID).Scan(
 		&h.ID, &h.Hostname, &h.IPAddress, &h.OS, &h.Status, &h.LastSeen,
@@ -40,6 +41,7 @@ func (r *SQLiteRepository) GetHostByID(hostID string) (HostFullDetail, error) {
 	return h, err
 }
 
+// NewSQLiteRepository initializes the SQLite database and creates tables if they don't exist
 func NewSQLiteRepository(dbPath string) (*SQLiteRepository, error) {
 	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
@@ -47,41 +49,42 @@ func NewSQLiteRepository(dbPath string) (*SQLiteRepository, error) {
 	}
 
 	schema := `
-    CREATE TABLE IF NOT EXISTS hosts (
-        id TEXT PRIMARY KEY,
-        hostname TEXT,
-        ip_address TEXT,
-        os TEXT,
-        status TEXT,
-        last_seen DATETIME,
-        max_cpu_usage INTEGER,
-        max_ram_usage INTEGER,
-        max_disk_usage INTEGER,
-        error_alert_limit INTEGER,
-        cpu_usage INTEGER DEFAULT 0,
-        ram_usage INTEGER DEFAULT 0,
-        disk_usage INTEGER DEFAULT 0
-    );
+	CREATE TABLE IF NOT EXISTS hosts (
+		id TEXT PRIMARY KEY,
+		hostname TEXT,
+		ip_address TEXT,
+		os TEXT,
+		status TEXT,
+		last_seen DATETIME,
+		max_cpu_usage INTEGER,
+		max_ram_usage INTEGER,
+		max_disk_usage INTEGER,
+		error_alert_limit INTEGER,
+		cpu_usage INTEGER DEFAULT 0,
+		ram_usage INTEGER DEFAULT 0,
+		disk_usage INTEGER DEFAULT 0
+	);
 
-    CREATE TABLE IF NOT EXISTS events (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        host_id TEXT,
-        level TEXT,
-        message TEXT,
-        passed BOOLEAN,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(host_id) REFERENCES hosts(id)
-    );
+	CREATE TABLE IF NOT EXISTS events (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		host_id TEXT,
+		level TEXT,
+		message TEXT,
+		passed BOOLEAN,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY(host_id) REFERENCES hosts(id)
+	);
 
-    CREATE TABLE IF NOT EXISTS thresholds (
-        level TEXT PRIMARY KEY,
-        enabled BOOLEAN
-    );
-    
-    CREATE TABLE IF NOT EXISTS processed_batches (
-        signature TEXT PRIMARY KEY,
-        processed_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );`
+	CREATE TABLE IF NOT EXISTS thresholds (
+		level TEXT PRIMARY KEY,
+		enabled BOOLEAN
+	);
+	
+	-- UNIQUE constraint applied via PRIMARY KEY to prevent Race Conditions
+	CREATE TABLE IF NOT EXISTS processed_batches (
+		signature TEXT PRIMARY KEY,
+		processed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	);`
 
 	_, err = db.Exec(schema)
 	if err != nil {
@@ -92,7 +95,7 @@ func NewSQLiteRepository(dbPath string) (*SQLiteRepository, error) {
 	return &SQLiteRepository{db: db}, nil
 }
 
-// Veritabanındaki tüm hostları alır
+// GetHosts retrieves all registered hosts from the database
 func (r *SQLiteRepository) GetHosts() ([]Host, error) {
 	query := "SELECT id, hostname, last_seen, cpu_usage, ram_usage, disk_usage FROM hosts"
 	rows, err := r.db.Query(query)
@@ -111,7 +114,7 @@ func (r *SQLiteRepository) GetHosts() ([]Host, error) {
 		hosts = append(hosts, h)
 	}
 
-	// Linter'ın istediği son güvenlik kontrolü
+	// Final security check requested by linter
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
@@ -119,12 +122,14 @@ func (r *SQLiteRepository) GetHosts() ([]Host, error) {
 	return hosts, nil
 }
 
+// SaveEvent inserts a new agent event into the database
 func (s *SQLiteRepository) SaveEvent(level, message string, passed bool) error {
 	query := "INSERT INTO events(level, message, passed) VALUES (?, ?, ?)"
 	_, err := s.db.Exec(query, level, message, passed)
 	return err
 }
 
+// GetEvents retrieves events based on optional level and time range filters
 func (r *SQLiteRepository) GetEvents(levelFilter string, timeRange string) ([]Event, error) {
 	query := "SELECT level, message FROM events WHERE 1=1"
 	var args []interface{}
@@ -133,13 +138,13 @@ func (r *SQLiteRepository) GetEvents(levelFilter string, timeRange string) ([]Ev
 		query += " AND level = ?"
 		args = append(args, levelFilter)
 	}
-	// Eğer zaman filtresi varsa sorguya ekle
+
+	// Add time filter if a range is provided
 	if timeRange != "" {
 		duration, err := time.ParseDuration(timeRange)
 		if err == nil {
-			// Şu anki zamandan istenilen süreyi çıkararak bir başlangıç noktası bul
+			// Find the cutoff point by subtracting the duration from the current time
 			cutoffTime := time.Now().Add(-duration).UTC()
-			// Log kayıt tarihi bu başlangıç noktasından büyük/eşit olanlar
 			query += " AND created_at >= ?"
 			args = append(args, cutoffTime)
 		}
@@ -155,14 +160,14 @@ func (r *SQLiteRepository) GetEvents(levelFilter string, timeRange string) ([]Ev
 	var events []Event
 	for rows.Next() {
 		var e Event
-		// Sadece yeni şemada olan alanları okuyoruz
 		err := rows.Scan(&e.Level, &e.Message)
 		if err != nil {
 			return nil, err
 		}
-		e.Passed = true // Struct hata vermesin diye varsayılan değer atıyoruz
+		e.Passed = true // Set default value to prevent struct errors
 		events = append(events, e)
 	}
+
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
@@ -170,8 +175,8 @@ func (r *SQLiteRepository) GetEvents(levelFilter string, timeRange string) ([]Ev
 	return events, nil
 }
 
+// UpdateHostMetricsFromLog dynamically updates host metrics based on parsed log data
 func (r *SQLiteRepository) UpdateHostMetricsFromLog(hostname string, cpu, ram, disk *int) error {
-	// Dinamik olarak hangi metrik geldiyse sadece onu güncelleyen esnek bir SQL yapıcısı
 	var setClauses []string
 	var args []interface{}
 
@@ -194,25 +199,26 @@ func (r *SQLiteRepository) UpdateHostMetricsFromLog(hostname string, cpu, ram, d
 
 	args = append(args, hostname)
 	query := fmt.Sprintf("UPDATE hosts SET %s WHERE hostname = ? OR id LIKE ?", strings.Join(setClauses, ", "))
-	// Ajan ID'si genellikle hostname + "-agent" şeklinde olduğu için her iki ihtimale de bakıyoruz
+
+	// Agent ID is usually in "hostname-agent" format, so we check both possibilities
 	args = append(args, hostname+"-agent")
 
 	_, err := r.db.Exec(query, args...)
 	return err
 }
 
-// Eşik ayarlarını SQLite'a kalıcı olarak kaydeder
+// UpdateHostThreshold permanently saves threshold settings to SQLite
 func (r *SQLiteRepository) UpdateHostThreshold(hostID string, cpu int, ram int, disk int, errLimit int) error {
 	query := `
-        UPDATE hosts 
-        SET max_cpu_usage = ?, max_ram_usage = ?, max_disk_usage = ?, error_alert_limit = ? 
-        WHERE id = ?`
+		UPDATE hosts 
+		SET max_cpu_usage = ?, max_ram_usage = ?, max_disk_usage = ?, error_alert_limit = ? 
+		WHERE id = ?`
 
 	_, err := r.db.Exec(query, cpu, ram, disk, errLimit, hostID)
 	return err
 }
 
-// Ajan ilk bağlandığında veya var olan ajan veri gönderdiğinde onu sisteme kaydeder
+// RegisterHost registers a new agent or updates the last_seen timestamp if it exists
 func (r *SQLiteRepository) RegisterHost(hostID, hostname, ip, os string) error {
 	query := `
 		INSERT INTO hosts (id, hostname, ip_address, os, status, last_seen) 
@@ -227,6 +233,7 @@ func (r *SQLiteRepository) RegisterHost(hostID, hostname, ip, os string) error {
 	return err
 }
 
+// IsBatchProcessed checks if the signature exists (Kept for interface compatibility)
 func (r *SQLiteRepository) IsBatchProcessed(signature string) bool {
 	var count int
 	err := r.db.QueryRow("SELECT COUNT(*) FROM processed_batches WHERE signature = ?", signature).Scan(&count)
@@ -236,10 +243,14 @@ func (r *SQLiteRepository) IsBatchProcessed(signature string) bool {
 	return count > 0
 }
 
+// MarkBatchProcessed attempts to insert the signature into the database.
+// If it fails due to UNIQUE constraint, we know it's a duplicate (Race Condition check).
 func (r *SQLiteRepository) MarkBatchProcessed(signature string) error {
 	_, err := r.db.Exec("INSERT INTO processed_batches (signature) VALUES (?)", signature)
 	return err
 }
+
+// Close safely closes the database connection
 func (s *SQLiteRepository) Close() {
 	s.db.Close()
 }
