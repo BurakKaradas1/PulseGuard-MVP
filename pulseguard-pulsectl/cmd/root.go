@@ -7,6 +7,7 @@ import (
 )
 
 var outputJSON bool
+var serverURL string
 
 // Herhangi bir alt komut girilmediğinde çalışır
 var rootCmd = &cobra.Command{
@@ -30,4 +31,6 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&outputJSON, "json", "j", false, "Output results in machine-readable JSON format")
+	// Dışarıdan sunucu adresini almak için server bayrağı eklendi
+	rootCmd.PersistentFlags().StringVarP(&serverURL, "server", "s", "http://localhost:8080", "PulseGuard C2 API Server URL")
 }

