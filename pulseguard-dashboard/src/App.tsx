@@ -21,7 +21,7 @@ export function App() {
   const [cpuHistory, setCpuHistory] = useState<{ time: string; cpu: number }[]>([]);
   const [refreshRate, setRefreshRate] = useState<number>(5000);
 
-  const API_BASE_URL = ''; 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
   useEffect(() => {
     let isMounted = true;
