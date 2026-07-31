@@ -13,12 +13,6 @@ type Config struct {
 	Port      string
 }
 
-// loadDotEnv, proje kokundeki .env dosyasini gercek process ortam
-// degiskenlerine yukler. Go standart kutuphanesi .env dosyalarini
-// otomatik okumadigi (ve bu projede godotenv gibi harici bir paket
-// kullanilmadigi) icin, .env dosyasindaki PULSEGUARD_SECRET normalde
-// hic bir zaman os.Getenv tarafindan gorulmuyordu. Zaten tanimli
-// gercek ortam degiskenlerinin uzerine yazmaz.
 func loadDotEnv(path string) {
 	data, err := os.ReadFile(path)
 	if err != nil {
