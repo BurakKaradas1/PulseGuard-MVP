@@ -2,6 +2,7 @@ package internal
 
 import (
 	"os"
+	"strings"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -59,4 +60,53 @@ func LoadConfig(filename string) (*Config, error) {
 
 	// 3. Basariliysa Config'in bellek adresini dondurur
 	return &cfg, nil
+}
+
+// LoadDotEnv, proje kokunde bulunan bir .env dosyasini okuyup icindeki
+// KEY=VALUE satirlarini gercek process ortam degiskeni olarak yukler.
+//
+// Go standart kutuphanesi .env dosyalarini otomatik OKUMAZ; os.Getenv
+// sadece isletim sistemi seviyesindeki gercek environment variable'lari
+// gorur. Bu proje harici bir dotenv paketi (godotenv vb.) kullanmadigi
+// icin, .env dosyasindaki PULSEGUARD_SECRET hic bir zaman devreye
+// girmiyor ve SendBatch her seferinde "PULSEGUARD_SECRET tanimli degil"
+// hatasiyla veri gondermeden iptal oluyordu. Bu fonksiyon o bosluk icin
+// bagimliliksiz (dependency-free) minimal bir cozum saglar.
+//
+// Zaten tanimli olan gercek ortam degiskenlerinin uzerine yazmaz (once
+// gercek env, sonra .env dosyasi gecerli olur).
+func LoadDotEnv(path string) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		// .env dosyasi opsiyoneldir (ornegin production'da gercek
+		// ortam degiskenleri zaten set edilmis olabilir); yoksa sessizce gec.
+		return
+	}
+
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+		value = strings.Trim(value, `"'`)
+
+		if key == "" {
+			continue
+		}
+
+		// Gercek bir ortam degiskeni zaten tanimliysa .env'deki degeri
+		// kullanmayarak gercek environment'in her zaman oncelikli
+		// olmasini sagliyoruz.
+		if _, exists := os.LookupEnv(key); !exists {
+			os.Setenv(key, value)
+		}
+	}
 }
