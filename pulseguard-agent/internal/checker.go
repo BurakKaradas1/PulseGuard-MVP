@@ -5,11 +5,9 @@ import (
 	"net/http"
 	"os/exec"
 	"runtime"
-	"syscall"
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
-	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
@@ -22,10 +20,14 @@ const (
 )
 
 type Event struct {
-	Level   LogLevel
-	Message string
-	Passed  bool
+	Level       LogLevel `json:"level"`
+	Message     string   `json:"message"`
+	Passed      bool     `json:"passed"`
+	MetricName  string   `json:"metric_name"`  // BUGFIX: Regex kırılganlığını önlemek için
+	MetricValue int      `json:"metric_value"` // BUGFIX: Metrikleri sayısal göndermek için
+	BatchID     string   `json:"batch_id"`     // BUGFIX: Idempotency (Veri Kaybı) çözümü için eşsiz ID
 }
+
 type Checker interface {
 	Check() Event
 	Name() string
@@ -35,27 +37,11 @@ type SystemChecker struct{}
 
 func (s *SystemChecker) Name() string { return "System Integrity" }
 func (s *SystemChecker) Check() Event {
-	return Event{Passed: true, Level: InfoLevel, Message: "System integrity is intact"}
-}
-
-type AnalysisChecker struct{} //Debugger, Analiz kontrolü
-
-func (a *AnalysisChecker) Name() string { return "Analysis/Debugger Detection" }
-func (a *AnalysisChecker) Check() Event {
-	//Windows cekirdek kütüphanesini yükle
-	kernel32 := syscall.NewLazyDLL("kernel32.dll")
-	isDebuggerPresent := kernel32.NewProc("IsDebuggerPresent")
-	//Fonksiyonu cagır
-	result, _, _ := isDebuggerPresent.Call()
-
-	if result != 0 {
-		return Event{Passed: false, Level: ErrorLevel, Message: "Debugger detected in the environment"} //Hata ayıklayıcı tespit edilmis
-	}
-	return Event{Passed: true, Level: InfoLevel, Message: "No debugger detected"}
+	return Event{Passed: true, Level: InfoLevel, Message: "System integrity is intact", MetricName: "system_integrity", MetricValue: 1}
 }
 
 type NetworkChecker struct {
-	URL string //YAML'dan gelecek hedef adres
+	URL string // Target address from YAML
 }
 
 func (n *NetworkChecker) Name() string { return "C2 Network Status" }
@@ -68,22 +54,20 @@ func (n *NetworkChecker) Check() Event {
 
 	resp, err := client.Get(targetURL)
 	if err != nil {
-		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to connect to C2"}
+		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to connect to C2", MetricName: "c2_status", MetricValue: 0}
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return Event{Passed: true, Level: WarningLevel, Message: "C2 connection successful"}
+		return Event{Passed: true, Level: WarningLevel, Message: "C2 connection successful", MetricName: "c2_status", MetricValue: resp.StatusCode}
 	}
 
-	return Event{Passed: true, Level: InfoLevel, Message: "C2 connection successful"}
+	return Event{Passed: true, Level: InfoLevel, Message: "C2 connection successful", MetricName: "c2_status", MetricValue: resp.StatusCode}
 }
-
-//------------------------------------------------------------
 
 // CPU Checker
 type CpuChecker struct {
-	Threshold int //YAML'dan gelecek sinir
+	Threshold int // Threshold from YAML
 }
 
 func (c *CpuChecker) Name() string { return "CPU Usage" }
@@ -97,14 +81,12 @@ func (c *CpuChecker) Check() Event {
 
 	if usage > c.Threshold {
 		message := fmt.Sprintf("CPU usage exceeded threshold: %d%%", usage)
-		return Event{Passed: false, Level: WarningLevel, Message: message}
+		return Event{Passed: false, Level: WarningLevel, Message: message, MetricName: "cpu", MetricValue: usage}
 	}
 
 	message := fmt.Sprintf("CPU normal: %d%%", usage)
-	return Event{Passed: true, Level: InfoLevel, Message: message}
+	return Event{Passed: true, Level: InfoLevel, Message: message, MetricName: "cpu", MetricValue: usage}
 }
-
-//-------------------------------------------------------------
 
 // RAM Checker
 type RamChecker struct {
@@ -122,39 +104,12 @@ func (r *RamChecker) Check() Event {
 
 	if usedRam > r.Threshold {
 		message := fmt.Sprintf("RAM usage exceeded threshold: %d%%", usedRam)
-		return Event{Passed: false, Level: WarningLevel, Message: message}
+		return Event{Passed: false, Level: WarningLevel, Message: message, MetricName: "ram", MetricValue: usedRam}
 	}
 
 	message := fmt.Sprintf("RAM normal: %d%%", usedRam)
-	return Event{Passed: true, Level: InfoLevel, Message: message}
+	return Event{Passed: true, Level: InfoLevel, Message: message, MetricName: "ram", MetricValue: usedRam}
 }
-
-//--------------------------------------------------------------
-
-// Disk Checker
-type DiskChecker struct {
-	Threshold int
-}
-
-func (d *DiskChecker) Name() string { return "Disk Usage" }
-func (d *DiskChecker) Check() Event {
-	diskStat, err := disk.Usage("C:\\")
-	if err != nil {
-		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read Disk metric"}
-	}
-
-	usedSpace := int(diskStat.UsedPercent)
-
-	if usedSpace > d.Threshold {
-		message := fmt.Sprintf("Disk capacity exceeded threshold: %d%%", usedSpace)
-		return Event{Passed: false, Level: WarningLevel, Message: message}
-	}
-
-	message := fmt.Sprintf("Disk normal: %d%%", usedSpace)
-	return Event{Passed: true, Level: InfoLevel, Message: message}
-}
-
-//---------------------------------------------------------------
 
 // Custom Command Checker
 type CustomCommandChecker struct {
@@ -162,7 +117,7 @@ type CustomCommandChecker struct {
 	Command   string
 }
 
-func (c *CustomCommandChecker) Name() string { return "c.CheckName" }
+func (c *CustomCommandChecker) Name() string { return c.CheckName }
 func (c *CustomCommandChecker) Check() Event {
 	var err error
 
@@ -173,21 +128,11 @@ func (c *CustomCommandChecker) Check() Event {
 	}
 
 	if err != nil {
-		return Event{
-			Passed:  false,
-			Level:   ErrorLevel,
-			Message: fmt.Sprintf("Command execution failed: %s", c.Command),
-		}
+		return Event{Passed: false, Level: ErrorLevel, Message: fmt.Sprintf("Command execution failed: %s", c.Command), MetricName: "custom_command", MetricValue: 0}
 	}
 
-	return Event{
-		Passed:  true,
-		Level:   InfoLevel,
-		Message: fmt.Sprintf("Command executed successfully: %s", c.Command),
-	}
+	return Event{Passed: true, Level: InfoLevel, Message: fmt.Sprintf("Command executed successfully: %s", c.Command), MetricName: "custom_command", MetricValue: 1}
 }
-
-//---------------------------------------------------------------
 
 // Custom HTTP Endpoint Checker
 type CustomHttpChecker struct {
@@ -201,26 +146,13 @@ func (h *CustomHttpChecker) Check() Event {
 
 	resp, err := client.Get(h.URL)
 	if err != nil {
-		return Event{
-			Passed:  false,
-			Level:   ErrorLevel,
-			Message: fmt.Sprintf("Failed to reach endpoint: %s", h.URL),
-		}
+		return Event{Passed: false, Level: ErrorLevel, Message: fmt.Sprintf("Failed to reach endpoint: %s", h.URL), MetricName: "custom_http", MetricValue: 0}
 	}
 	defer resp.Body.Close()
 
-	// 200-299 arası başarı, diğerleri hata kabul edilir
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return Event{
-			Passed:  false,
-			Level:   WarningLevel,
-			Message: fmt.Sprintf("Endpoint returned HTTP %d: %s", resp.StatusCode, h.URL),
-		}
+		return Event{Passed: false, Level: WarningLevel, Message: fmt.Sprintf("Endpoint returned HTTP %d: %s", resp.StatusCode, h.URL), MetricName: "custom_http", MetricValue: resp.StatusCode}
 	}
 
-	return Event{
-		Passed:  true,
-		Level:   InfoLevel,
-		Message: fmt.Sprintf("Endpoint is healthy (HTTP 200): %s", h.URL),
-	}
+	return Event{Passed: true, Level: InfoLevel, Message: fmt.Sprintf("Endpoint is healthy (HTTP 200): %s", h.URL), MetricName: "custom_http", MetricValue: resp.StatusCode}
 }

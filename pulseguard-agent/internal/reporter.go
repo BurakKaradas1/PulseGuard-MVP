@@ -83,7 +83,12 @@ func SendBatch(events []Event, fullURL string) error {
 		return nil
 	}
 
-	// 1. Ortam değişkeninden gizli anahtarı oku (İngilizce hata mesajı ile)
+	// BUGFIX: Idempotency sorunu. Her pakete eşsiz bir kimlik basıyoruz ki imzaları farklı çıksın.
+	batchID := fmt.Sprintf("%d", time.Now().UnixNano())
+	for i := range events {
+		events[i].BatchID = batchID
+	}
+
 	secretKey := os.Getenv("PULSEGUARD_SECRET")
 	if secretKey == "" {
 		return fmt.Errorf("PULSEGUARD_SECRET environment variable is not defined, data transmission aborted")
@@ -94,7 +99,6 @@ func SendBatch(events []Event, fullURL string) error {
 		return err
 	}
 
-	// 2. Şifreleme işlemini dinamik anahtarla yap
 	signature := generateSignature(data, secretKey)
 
 	req, err := http.NewRequest("POST", fullURL, bytes.NewBuffer(data))
@@ -102,10 +106,6 @@ func SendBatch(events []Event, fullURL string) error {
 		return err
 	}
 
-	// Bu batch'in hangi host'a ait oldugunu collector'a bildiriyoruz.
-	// Onceden bu bilgi hic gonderilmiyordu ve collector, gelen metrikleri
-	// veritabanindaki TUM host'lara uyguluyordu (birden fazla agent
-	// oldugunda hepsi ayni degeri gosteriyordu).
 	hostname, err := os.Hostname()
 	if err != nil {
 		hostname = "unknown-host"
