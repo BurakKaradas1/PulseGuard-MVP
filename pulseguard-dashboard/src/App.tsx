@@ -30,7 +30,7 @@ export function App() {
     const fetchHostsSafely = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/hosts`);
-        if (!response.ok) throw new Error("Ağ hatası");
+        if (!response.ok) throw new Error("Network error");
         const data = await response.json();
         
         if (isMounted) {
@@ -40,7 +40,7 @@ export function App() {
           if (selectedHost) {
             const currentUpdatedHost = data.find((h: HostStatus) => h.id === selectedHost.id);
             if (currentUpdatedHost) {
-              const nowTime = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+              const nowTime = new Date().toLocaleTimeString('tr-TR', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
               setCpuHistory(prev => [
                 ...prev.slice(-6),
                 { time: nowTime, cpu: currentUpdatedHost.cpu_usage || 0 }
@@ -75,14 +75,14 @@ export function App() {
     const initialDetail: HostDetail = {
       ...baseHost,
       ip_address: baseHost.ip_address || "192.168.1.X",
-      os: "Yükleniyor...",
+      os: "Loading...",
       threshold: { max_cpu_usage: 90, max_ram_usage: 90, max_disk_usage: 90, error_alert_limit: 5 }
     };
     setSelectedHost(initialDetail);
     setEditThresholds(initialDetail.threshold);
     setSaveStatus("");
 
-    const nowTime = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const nowTime = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
     setCpuHistory([{ time: nowTime, cpu: baseHost.cpu_usage || 0 }]);
 
     try {
@@ -104,7 +104,7 @@ export function App() {
 
   const handleSaveThresholds = async () => {
     if (!selectedHost) return;
-    setSaveStatus("Kaydediliyor...");
+    setSaveStatus("Saving...");
     try {
       const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/hosts/threshold?id=${selectedHost.id}`, {
         method: 'POST',
@@ -113,15 +113,15 @@ export function App() {
       });
       
       if (response.ok) {
-        setSaveStatus("Başarıyla kaydedildi!");
+        setSaveStatus("Successfully saved!");
         setSelectedHost({...selectedHost, threshold: editThresholds}); 
         setTimeout(() => setSaveStatus(""), 3000);
       } else {
         const errorText = await response.text();
-        setSaveStatus(`Kayıt başarısız: ${errorText}`);
+        setSaveStatus(`Save failed: ${errorText}`);
       }
     } catch (err) {
-      setSaveStatus("Bağlantı hatası.");
+      setSaveStatus("Connection error.");
     }
   };
 
@@ -159,20 +159,20 @@ export function App() {
 
         <div style={{ padding: '32px', flex: 1, overflowY: 'auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(202, 138, 4, 0.5)', paddingBottom: '8px' }}>
-            <h2 style={{ fontSize: '20px', margin: 0, color: '#d1d5db', textShadow: '0 0 8px rgba(209, 213, 219, 0.3)' }}>Filo Metrikleri (Özet)</h2>
-            <button className="action-btn" onClick={() => setIsExportOpen(true)}>📥 RAPOR AL</button>
+            <h2 style={{ fontSize: '20px', margin: 0, color: '#d1d5db', textShadow: '0 0 8px rgba(209, 213, 219, 0.3)' }}>Fleet Metrics (Overview)</h2>
+            <button className="action-btn" onClick={() => setIsExportOpen(true)}>📥 EXPORT REPORT</button>
           </div>
           
           <SummaryCards hosts={hosts} />
 
-          <h2 style={{ fontSize: '20px', marginBottom: '16px', borderBottom: '1px solid rgba(202, 138, 4, 0.5)', paddingBottom: '8px', color: '#d1d5db', textShadow: '0 0 8px rgba(209, 213, 219, 0.3)' }}>Host Listesi</h2>
+          <h2 style={{ fontSize: '20px', marginBottom: '16px', borderBottom: '1px solid rgba(202, 138, 4, 0.5)', paddingBottom: '8px', color: '#d1d5db', textShadow: '0 0 8px rgba(209, 213, 219, 0.3)' }}>Host List</h2>
           
           <HostTable hosts={hosts} selectedHostId={selectedHost?.id} onHostClick={handleHostClick} />
         </div>
       </main>
 
-      <HostDetailPanel 
-        selectedHost={selectedHost} 
+      <HostDetailPanel
+        selectedHost={selectedHost}
         onClose={() => setSelectedHost(null)}
         cpuHistory={cpuHistory}
         editThresholds={editThresholds}

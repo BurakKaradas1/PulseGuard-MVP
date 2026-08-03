@@ -154,3 +154,903 @@
 {"Level":"INFO","Message":"CPU normal: 4%","Passed":true}
 {"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
 {"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 57%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 21%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 20%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 20%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 19%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 20%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 25%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 20%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 20%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 19%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 21%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 60%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 60%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 10%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 10%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 9%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 31%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 21%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 19%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 19%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 60%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 21%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 60%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 60%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 21%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 22%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 60%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 62%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 10%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 61%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 62%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 19%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 8%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 13%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 19%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 59%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 9%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 58%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 9%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 52%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 52%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 19%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 11%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 20%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 17%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 15%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 16%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 14%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 54%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}
+{"Level":"INFO","Message":"System integrity is intact","Passed":true}
+{"Level":"INFO","Message":"No debugger detected","Passed":true}
+{"Level":"WARNING","Message":"C2 connection successful","Passed":true}
+{"Level":"INFO","Message":"CPU normal: 18%","Passed":true}
+{"Level":"INFO","Message":"RAM normal: 53%","Passed":true}
+{"Level":"INFO","Message":"Disk normal: 81%","Passed":true}

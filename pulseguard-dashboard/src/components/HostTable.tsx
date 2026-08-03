@@ -28,9 +28,9 @@ export const HostTable: React.FC<HostTableProps> = ({ hosts, selectedHostId, onH
       <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ backgroundColor: '#111827', borderBottom: '1px solid rgba(202, 138, 4, 0.5)' }}>
-            <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Durum</th>
-            <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Host Adı</th>
-            <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px' }}>Son Görülme</th>
+            <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px' }}>STATUS</th>
+            <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px' }}>HOSTNAME</th>
+            <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px' }}>LAST SEEN</th>
             <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', width: '18%' }}>CPU</th>
             <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', width: '18%' }}>RAM</th>
             <th style={{ padding: '16px 12px', fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', width: '18%' }}>DISK</th>
@@ -39,7 +39,7 @@ export const HostTable: React.FC<HostTableProps> = ({ hosts, selectedHostId, onH
         <tbody>
           {hosts.length === 0 ? (
             <tr>
-              <td colSpan={6} style={{ padding: '24px', textAlign: 'center', color: '#6b7280' }}>Henüz kayıtlı host bulunamadı veya ajan bekleniyor...</td>
+              <td colSpan={6} style={{ padding: '24px', textAlign: 'center', color: '#6b7280' }}>No registered hosts found or waiting for agent...</td>
             </tr>
           ) : (
             hosts.map(host => {
