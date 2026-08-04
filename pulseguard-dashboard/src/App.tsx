@@ -18,7 +18,9 @@ export function App() {
 
   const [editThresholds, setEditThresholds] = useState<ThresholdConfig>({ max_cpu_usage: 90, max_ram_usage: 90, max_disk_usage: 90, error_alert_limit: 5 });
   const [saveStatus, setSaveStatus] = useState<string>("");
-  const [cpuHistory, setCpuHistory] = useState<{ time: string; cpu: number }[]>([]);
+  
+  // SADECE CPU DEĞİL, TÜM METRİKLERİ İZLİYORUZ
+  const [metricsHistory, setMetricsHistory] = useState<{ time: string; cpu: number; ram: number; disk: number }[]>([]);
   const [refreshRate, setRefreshRate] = useState<number>(5000);
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
@@ -41,9 +43,16 @@ export function App() {
             const currentUpdatedHost = data.find((h: HostStatus) => h.id === selectedHost.id);
             if (currentUpdatedHost) {
               const nowTime = new Date().toLocaleTimeString('tr-TR', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-              setCpuHistory(prev => [
+              
+              // GELEN TÜM VERİLERİ GEÇMİŞE EKLİYORUZ
+              setMetricsHistory(prev => [
                 ...prev.slice(-6),
-                { time: nowTime, cpu: currentUpdatedHost.cpu_usage || 0 }
+                { 
+                  time: nowTime, 
+                  cpu: currentUpdatedHost.cpu_usage || 0,
+                  ram: currentUpdatedHost.ram_usage || 0,
+                  disk: currentUpdatedHost.disk_usage || 0
+                }
               ]);
             }
           }
@@ -51,7 +60,7 @@ export function App() {
       } catch (error) {
         if (isMounted) {
           setApiStatus("disconnected");
-          setHosts([]);
+          // setHosts([]); -> Veritabanı anlık yorulursa ekran silinmesin diye burayı kapalı tutmaya devam ediyoruz.
         }
       } finally {
         if (isMounted) {
@@ -83,7 +92,14 @@ export function App() {
     setSaveStatus("");
 
     const nowTime = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    setCpuHistory([{ time: nowTime, cpu: baseHost.cpu_usage || 0 }]);
+    
+    // PANELE İLK TIKLANDIĞINDA TÜM VERİLERİ SIFIRDAN BAŞLATIYORUZ
+    setMetricsHistory([{ 
+      time: nowTime, 
+      cpu: baseHost.cpu_usage || 0,
+      ram: baseHost.ram_usage || 0,
+      disk: baseHost.disk_usage || 0
+    }]);
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/hosts/detail?id=${hostId}`);
@@ -174,7 +190,7 @@ export function App() {
       <HostDetailPanel
         selectedHost={selectedHost}
         onClose={() => setSelectedHost(null)}
-        cpuHistory={cpuHistory}
+        metricsHistory={metricsHistory} 
         editThresholds={editThresholds}
         setEditThresholds={setEditThresholds}
         onSaveThresholds={handleSaveThresholds}
