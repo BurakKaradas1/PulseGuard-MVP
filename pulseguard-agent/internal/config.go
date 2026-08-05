@@ -7,6 +7,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type CustomCommand struct {
+	Name    string `yaml:"name"`
+	Command string `yaml:"command"`
+}
+
+type CustomHTTP struct {
+	Name string `yaml:"name"`
+	URL  string `yaml:"url"`
+}
+
 type Config struct {
 	Agent struct {
 		Interval     time.Duration `yaml:"interval"`
@@ -24,6 +34,11 @@ type Config struct {
 		AnalysisDetection bool `yaml:"analysis_detection"`
 		NetworkStatus     bool `yaml:"network_status"`
 	} `yaml:"checks"`
+
+	CustomChecks struct {
+		Commands      []CustomCommand `yaml:"commands"`
+		HttpEndpoints []CustomHTTP    `yaml:"http_endpoints"`
+	} `yaml:"custom_checks"`
 }
 
 // LoadConfig dosyayi okur ve Config struct'ina donusturur

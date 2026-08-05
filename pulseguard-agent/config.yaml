@@ -12,3 +12,11 @@ checks:
   system_integrity: true
   analysis_detection: true
   network_status: true
+
+custom_checks:
+  commands:
+    - name: "Windows Update Service Check"
+      command: "sc query wuauserv"
+  http_endpoints:
+    - name: "Company Website Status"
+      url: "https://www.google.com"

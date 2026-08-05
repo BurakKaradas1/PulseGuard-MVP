@@ -3,6 +3,8 @@ package internal
 import (
 	"fmt"
 	"net/http"
+	"os/exec"
+	"runtime"
 	"syscall"
 	"time"
 
@@ -150,4 +152,75 @@ func (d *DiskChecker) Check() Event {
 
 	message := fmt.Sprintf("Disk normal: %d%%", usedSpace)
 	return Event{Passed: true, Level: InfoLevel, Message: message}
+}
+
+//---------------------------------------------------------------
+
+// Custom Command Checker
+type CustomCommandChecker struct {
+	CheckName string
+	Command   string
+}
+
+func (c *CustomCommandChecker) Name() string { return "c.CheckName" }
+func (c *CustomCommandChecker) Check() Event {
+	var err error
+
+	if runtime.GOOS == "windows" {
+		err = exec.Command("cmd", "/C", c.Command).Run()
+	} else {
+		err = exec.Command("sh", "-c", c.Command).Run()
+	}
+
+	if err != nil {
+		return Event{
+			Passed:  false,
+			Level:   ErrorLevel,
+			Message: fmt.Sprintf("Command execution failed: %s", c.Command),
+		}
+	}
+
+	return Event{
+		Passed:  true,
+		Level:   InfoLevel,
+		Message: fmt.Sprintf("Command executed successfully: %s", c.Command),
+	}
+}
+
+//---------------------------------------------------------------
+
+// Custom HTTP Endpoint Checker
+type CustomHttpChecker struct {
+	CheckName string
+	URL       string
+}
+
+func (h *CustomHttpChecker) Name() string { return h.CheckName }
+func (h *CustomHttpChecker) Check() Event {
+	client := http.Client{Timeout: 5 * time.Second}
+
+	resp, err := client.Get(h.URL)
+	if err != nil {
+		return Event{
+			Passed:  false,
+			Level:   ErrorLevel,
+			Message: fmt.Sprintf("Failed to reach endpoint: %s", h.URL),
+		}
+	}
+	defer resp.Body.Close()
+
+	// 200-299 arası başarı, diğerleri hata kabul edilir
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return Event{
+			Passed:  false,
+			Level:   WarningLevel,
+			Message: fmt.Sprintf("Endpoint returned HTTP %d: %s", resp.StatusCode, h.URL),
+		}
+	}
+
+	return Event{
+		Passed:  true,
+		Level:   InfoLevel,
+		Message: fmt.Sprintf("Endpoint is healthy (HTTP 200): %s", h.URL),
+	}
 }
