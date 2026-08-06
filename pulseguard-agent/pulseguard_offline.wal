@@ -1,6 +1,0 @@
-{"Level":"INFO","Message":"System integrity is intact","Passed":true}
-{"Level":"INFO","Message":"No debugger detected","Passed":true}
-{"Level":"ERROR","Message":"Failed to connect to C2","Passed":false}
-{"Level":"INFO","Message":"CPU normal: 12%","Passed":true}
-{"Level":"INFO","Message":"RAM normal: 56%","Passed":true}
-{"Level":"INFO","Message":"Disk normal: 84%","Passed":true}
