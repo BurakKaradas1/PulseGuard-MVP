@@ -20,7 +20,7 @@ type Host struct {
 
 type Repository interface {
 	//Ajanlardan gelen yeni olayları kaydeder
-	SaveEvent(level, message string, passed bool) error
+	SaveEvent(hostID string, level string, message string, passed bool) error
 
 	//Dashboard için filreleme
 	GetEvents(levelFilter string, timeRange string) ([]Event, error)

@@ -37,7 +37,6 @@ type APIServer struct {
 	secretKey string
 }
 
-// 1. Get details of a specific host (GET)
 func (s *APIServer) HandleGetHostDetail(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -56,11 +55,16 @@ func (s *APIServer) HandleGetHostDetail(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	status := "offline"
+	if time.Since(hostData.LastSeen) < 3*time.Minute {
+		status = "healthy"
+	}
+
 	detail := HostDetail{
 		HostStatus: HostStatus{
 			ID:       hostData.ID,
 			Hostname: hostData.Hostname,
-			Status:   hostData.Status,
+			Status:   status, // BUGFIX: Artık veritabanından değil, zamana göre dinamik!
 			LastSeen: hostData.LastSeen,
 		},
 		IPAddress: hostData.IPAddress,
@@ -77,7 +81,6 @@ func (s *APIServer) HandleGetHostDetail(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode(detail)
 }
 
-// 2. Set new alarm thresholds for a host (POST)
 func (s *APIServer) HandleSetThreshold(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -155,8 +158,6 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// Idempotency & Race Condition Prevention:
-	// Attempt to insert signature directly into processed_batches using DB UNIQUE constraint.
 	err = s.repo.MarkBatchProcessed(agentSignature)
 	if err != nil {
 		fmt.Println("[-] Idempotency: This batch has already been processed (Race Condition prevented), skipping.")
@@ -172,10 +173,17 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// BUGFIX: Hostname bilgisini log döngüsünden ÖNCE alıyoruz ki sahipsiz log kalmasın.
+	agentHostname := r.Header.Get("X-PulseGuard-Hostname")
+	if agentHostname == "" {
+		agentHostname = "unknown-host"
+	}
+
 	var latestCpu, latestRam, latestDisk *int
 
 	for _, event := range events {
-		err = s.repo.SaveEvent(event.Level, event.Message, event.Passed)
+		// BUGFIX: Logları kaydederken makine adını (agentHostname) da gönderiyoruz.
+		err = s.repo.SaveEvent(agentHostname, event.Level, event.Message, event.Passed)
 		if err != nil {
 			fmt.Printf("Failed to insert event: %v\n", err)
 		}
@@ -197,19 +205,9 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if latestCpu != nil || latestRam != nil || latestDisk != nil {
-		// Bu batch'i gonderen agent'in hostname'i (bkz. reporter.go ->
-		// X-PulseGuard-Hostname). Bos gelirse (eski agent surumu vb.)
-		// hicbir host'u guncellemiyoruz; onceden burada TUM host'lar
-		// donup ayni metrikleri hepsine yaziyordu, bu da birden fazla
-		// host oldugunda hepsinin ayni (yanlis) degerleri gostermesine
-		// sebep oluyordu.
-		agentHostname := r.Header.Get("X-PulseGuard-Hostname")
-
-		if agentHostname != "" {
-			// 1. Sadece bu batch'i gonderen host'u guncelle
+		if agentHostname != "unknown-host" {
 			_ = s.repo.UpdateHostMetricsFromLog(agentHostname, latestCpu, latestRam, latestDisk)
 
-			// 2. O host'un guncel esik degerlerini bulup Slack alarm kontrolu yap
 			hosts, _ := s.repo.GetHosts()
 			for _, h := range hosts {
 				if h.Hostname == agentHostname || h.ID == agentHostname+"-agent" {
@@ -252,7 +250,6 @@ type HostStatus struct {
 	DiskUsage int       `json:"disk_usage"`
 }
 
-// Fleet view
 func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -267,10 +264,17 @@ func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 
 	var hosts []HostStatus
 	for _, h := range dbHosts {
+
+		// Her bir makine için dinamik statü kontrolü
+		status := "offline"
+		if time.Since(h.LastSeen) < 3*time.Minute {
+			status = "healthy"
+		}
+
 		hosts = append(hosts, HostStatus{
 			ID:        h.ID,
 			Hostname:  h.Hostname,
-			Status:    "healthy",
+			Status:    status, // BUGFIX: Sabit "healthy" yerine dinamik zaman kontrolü
 			LastSeen:  h.LastSeen,
 			CpuUsage:  h.CpuUsage,
 			RamUsage:  h.RamUsage,
@@ -286,7 +290,6 @@ func (s *APIServer) HandleGetHosts(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(hosts)
 }
 
-// Returns filtered events for time and reports
 func (s *APIServer) HandleGetEvents(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -306,7 +309,6 @@ func (s *APIServer) HandleGetEvents(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(events)
 }
 
-// 3. Registers the agent when it first connects (POST)
 func (s *APIServer) HandleRegisterHost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -349,27 +351,45 @@ func parseMetricValue(message string) (int, bool) {
 	return 0, false
 }
 
-// Slack'e bildirim gönderen fonksiyon
 func sendSlackWebhook(hostname string, alerts []string) {
 	webhookURL := os.Getenv("SLACK_WEBHOOK_URL")
 	if webhookURL == "" {
+		fmt.Println("[-] SLACK_WEBHOOK_URL BULUNAMADI VEYA BOŞ!")
 		return
 	}
 
 	messageContent := fmt.Sprintf("*PULSEGUARD CRITICAL ALERT: %s*\nSistem eşik değerleri aşıldı: %s",
 		hostname,
 		strings.Join(alerts, " | "))
-
 	payload := map[string]string{
 		"text": messageContent,
 	}
 
 	jsonData, _ := json.Marshal(payload)
 
-	go func() {
-		resp, err := http.Post(webhookURL, "application/json", bytes.NewBuffer(jsonData))
-		if err == nil {
-			resp.Body.Close()
-		}
-	}()
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+
+	req, err := http.NewRequest("POST", webhookURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Printf("[!] Slack isteği oluşturulamadı: %v\n", err)
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("[!] Slack API zaman aşımına uğradı veya ulaşılamadı: %v\n", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("[!] Slack bizi reddetti, Status Code: %d\n", resp.StatusCode)
+		return
+	}
+
+	fmt.Println("[+] Slack Webhook başarıyla tetiklendi!")
 }

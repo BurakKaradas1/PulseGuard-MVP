@@ -123,9 +123,11 @@ func (r *SQLiteRepository) GetHosts() ([]Host, error) {
 }
 
 // SaveEvent inserts a new agent event into the database
-func (s *SQLiteRepository) SaveEvent(level, message string, passed bool) error {
-	query := "INSERT INTO events(level, message, passed) VALUES (?, ?, ?)"
-	_, err := s.db.Exec(query, level, message, passed)
+func (r *SQLiteRepository) SaveEvent(hostID string, level string, message string, passed bool) error {
+	// BUGFIX: Artık host_id alanını da veritabanına kaydediyoruz
+	query := `INSERT INTO events (host_id, level, message, passed) VALUES (?, ?, ?, ?)`
+
+	_, err := r.db.Exec(query, hostID, level, message, passed)
 	return err
 }
 
