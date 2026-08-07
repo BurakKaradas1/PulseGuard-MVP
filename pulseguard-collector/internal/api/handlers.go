@@ -197,32 +197,41 @@ func (s *APIServer) HandleReceiveEvents(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if latestCpu != nil || latestRam != nil || latestDisk != nil {
-		hosts, _ := s.repo.GetHosts()
-		for _, h := range hosts {
+		// Bu batch'i gonderen agent'in hostname'i (bkz. reporter.go ->
+		// X-PulseGuard-Hostname). Bos gelirse (eski agent surumu vb.)
+		// hicbir host'u guncellemiyoruz; onceden burada TUM host'lar
+		// donup ayni metrikleri hepsine yaziyordu, bu da birden fazla
+		// host oldugunda hepsinin ayni (yanlis) degerleri gostermesine
+		// sebep oluyordu.
+		agentHostname := r.Header.Get("X-PulseGuard-Hostname")
 
-			// 1. Host'un güncel eşik değerlerini (sınırlarını) veritabanından çekiyoruz
-			hostDetail, err := s.repo.GetHostByID(h.ID)
+		if agentHostname != "" {
+			// 1. Sadece bu batch'i gonderen host'u guncelle
+			_ = s.repo.UpdateHostMetricsFromLog(agentHostname, latestCpu, latestRam, latestDisk)
 
-			if err == nil {
-				// 2. Senin yazdığın orijinal DB güncelleme kodu (olduğu gibi duruyor)
-				_ = s.repo.UpdateHostMetricsFromLog(h.Hostname, latestCpu, latestRam, latestDisk)
+			// 2. O host'un guncel esik degerlerini bulup Slack alarm kontrolu yap
+			hosts, _ := s.repo.GetHosts()
+			for _, h := range hosts {
+				if h.Hostname == agentHostname || h.ID == agentHostname+"-agent" {
+					hostDetail, err := s.repo.GetHostByID(h.ID)
+					if err == nil {
+						var triggeredAlerts []string
 
-				// 3. YENİ: Slack Webhook Alarm Kontrolü
-				var triggeredAlerts []string
+						if latestCpu != nil && *latestCpu > hostDetail.MaxCpuUsage {
+							triggeredAlerts = append(triggeredAlerts, fmt.Sprintf("CPU: %%%d (Sınır: %%%d)", *latestCpu, hostDetail.MaxCpuUsage))
+						}
+						if latestRam != nil && *latestRam > hostDetail.MaxRamUsage {
+							triggeredAlerts = append(triggeredAlerts, fmt.Sprintf("RAM: %%%d (Sınır: %%%d)", *latestRam, hostDetail.MaxRamUsage))
+						}
+						if latestDisk != nil && *latestDisk > hostDetail.MaxDiskUsage {
+							triggeredAlerts = append(triggeredAlerts, fmt.Sprintf("DISK: %%%d (Sınır: %%%d)", *latestDisk, hostDetail.MaxDiskUsage))
+						}
 
-				if latestCpu != nil && *latestCpu > hostDetail.MaxCpuUsage {
-					triggeredAlerts = append(triggeredAlerts, fmt.Sprintf("CPU: %%%d (Sınır: %%%d)", *latestCpu, hostDetail.MaxCpuUsage))
-				}
-				if latestRam != nil && *latestRam > hostDetail.MaxRamUsage {
-					triggeredAlerts = append(triggeredAlerts, fmt.Sprintf("RAM: %%%d (Sınır: %%%d)", *latestRam, hostDetail.MaxRamUsage))
-				}
-				if latestDisk != nil && *latestDisk > hostDetail.MaxDiskUsage {
-					triggeredAlerts = append(triggeredAlerts, fmt.Sprintf("DISK: %%%d (Sınır: %%%d)", *latestDisk, hostDetail.MaxDiskUsage))
-				}
-
-				// Eğer limitleri aşan en az 1 metrik varsa, Slack fonksiyonunu tetikle
-				if len(triggeredAlerts) > 0 {
-					sendSlackWebhook(hostDetail.Hostname, triggeredAlerts)
+						if len(triggeredAlerts) > 0 {
+							sendSlackWebhook(hostDetail.Hostname, triggeredAlerts)
+						}
+					}
+					break
 				}
 			}
 		}

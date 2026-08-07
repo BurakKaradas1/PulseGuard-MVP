@@ -32,6 +32,12 @@ cd pulseguard-agent
 # PULSEGUARD_SECRET=your-super-secret-key
 go run main.go
 
+> **Not:** `.env` dosyaları artık uygulama başlarken otomatik olarak okunuyor
+> (bağımlılıksız minik bir loader eklendi). Agent'ı ve collector'ı **aynı**
+> `PULSEGUARD_SECRET` değeriyle çalıştırdığından emin ol, aksi halde agent
+> event göndermeyi sessizce iptal eder ve dashboard'da metrikler hep %0
+> görünür.
+
 ### 3. Dashboard (Frontend) Setup
 cd pulseguard-dashboard
 # Create a .env file and add your API base URL

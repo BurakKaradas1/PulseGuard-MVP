@@ -102,8 +102,18 @@ func SendBatch(events []Event, fullURL string) error {
 		return err
 	}
 
+	// Bu batch'in hangi host'a ait oldugunu collector'a bildiriyoruz.
+	// Onceden bu bilgi hic gonderilmiyordu ve collector, gelen metrikleri
+	// veritabanindaki TUM host'lara uyguluyordu (birden fazla agent
+	// oldugunda hepsi ayni degeri gosteriyordu).
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "unknown-host"
+	}
+
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-PulseGuard-Signature", signature)
+	req.Header.Set("X-PulseGuard-Hostname", hostname)
 
 	client := &http.Client{Timeout: 5 * time.Second}
 	resp, err := client.Do(req)

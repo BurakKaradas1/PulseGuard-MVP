@@ -8,6 +8,10 @@ import (
 )
 
 func main() {
+	// 0. .env dosyasindaki PULSEGUARD_SECRET gibi degerleri gercek
+	// ortam degiskenlerine yukle (Go bunu otomatik yapmaz).
+	internal.LoadDotEnv(".env")
+
 	// 1. YAML yapılandırma dosyası
 	cfg, err := internal.LoadConfig("config.yaml")
 	if err != nil {
