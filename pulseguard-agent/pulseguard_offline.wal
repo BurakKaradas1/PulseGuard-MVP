@@ -1,0 +1,8 @@
+{"level":"INFO","message":"System integrity is intact","passed":true,"metric_name":"system_integrity","metric_value":1,"batch_id":"1786627596985277500"}
+{"level":"INFO","message":"No debugger detected","passed":true,"metric_name":"debugger_detected","metric_value":0,"batch_id":"1786627596985277500"}
+{"level":"WARNING","message":"C2 connection successful","passed":true,"metric_name":"c2_status","metric_value":404,"batch_id":"1786627596985277500"}
+{"level":"INFO","message":"CPU normal: 17%","passed":true,"metric_name":"cpu_usage","metric_value":17,"batch_id":"1786627596985277500"}
+{"level":"INFO","message":"RAM normal: 76%","passed":true,"metric_name":"ram_usage","metric_value":76,"batch_id":"1786627596985277500"}
+{"level":"INFO","message":"Disk normal: 93%","passed":true,"metric_name":"disk","metric_value":93,"batch_id":"1786627596985277500"}
+{"level":"INFO","message":"Command executed successfully: sc query wuauserv","passed":true,"metric_name":"custom_command","metric_value":1,"batch_id":"1786627596985277500"}
+{"level":"INFO","message":"Endpoint is healthy (HTTP 200): https://www.google.com","passed":true,"metric_name":"custom_http","metric_value":200,"batch_id":"1786627596985277500"}

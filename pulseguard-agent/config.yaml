@@ -6,7 +6,7 @@ agent:
 thresholds:
   cpu: 80
   ram: 85
-  disk: 90
+  disk: 98
 
 checks:
   system_integrity: true

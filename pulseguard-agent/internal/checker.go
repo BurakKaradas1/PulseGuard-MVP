@@ -74,18 +74,21 @@ func (c *CpuChecker) Name() string { return "CPU Usage" }
 func (c *CpuChecker) Check() Event {
 	percentages, err := cpu.Percent(0, false)
 	if err != nil {
-		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read CPU metric"}
+		// BUGFIX: Hata anında MetricName ve MetricValue eklendi
+		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read CPU metric", MetricName: "cpu_usage", MetricValue: 0}
 	}
 
 	usage := int(percentages[0])
 
 	if usage > c.Threshold {
 		message := fmt.Sprintf("CPU usage exceeded threshold: %d%%", usage)
-		return Event{Passed: false, Level: WarningLevel, Message: message, MetricName: "cpu", MetricValue: usage}
+		// BUGFIX: İsim "cpu" yerine "cpu_usage" yapıldı
+		return Event{Passed: false, Level: WarningLevel, Message: message, MetricName: "cpu_usage", MetricValue: usage}
 	}
 
 	message := fmt.Sprintf("CPU normal: %d%%", usage)
-	return Event{Passed: true, Level: InfoLevel, Message: message, MetricName: "cpu", MetricValue: usage}
+	// BUGFIX: İsim "cpu" yerine "cpu_usage" yapıldı
+	return Event{Passed: true, Level: InfoLevel, Message: message, MetricName: "cpu_usage", MetricValue: usage}
 }
 
 // RAM Checker
@@ -97,18 +100,21 @@ func (r *RamChecker) Name() string { return "RAM Usage" }
 func (r *RamChecker) Check() Event {
 	virtualMem, err := mem.VirtualMemory()
 	if err != nil {
-		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read RAM metric"}
+		// BUGFIX: Hata anında MetricName ve MetricValue eklendi
+		return Event{Passed: false, Level: ErrorLevel, Message: "Failed to read RAM metric", MetricName: "ram_usage", MetricValue: 0}
 	}
 
 	usedRam := int(virtualMem.UsedPercent)
 
 	if usedRam > r.Threshold {
 		message := fmt.Sprintf("RAM usage exceeded threshold: %d%%", usedRam)
-		return Event{Passed: false, Level: WarningLevel, Message: message, MetricName: "ram", MetricValue: usedRam}
+		// BUGFIX: İsim "ram" yerine "ram_usage" yapıldı
+		return Event{Passed: false, Level: WarningLevel, Message: message, MetricName: "ram_usage", MetricValue: usedRam}
 	}
 
 	message := fmt.Sprintf("RAM normal: %d%%", usedRam)
-	return Event{Passed: true, Level: InfoLevel, Message: message, MetricName: "ram", MetricValue: usedRam}
+	// BUGFIX: İsim "ram" yerine "ram_usage" yapıldı
+	return Event{Passed: true, Level: InfoLevel, Message: message, MetricName: "ram_usage", MetricValue: usedRam}
 }
 
 // Custom Command Checker

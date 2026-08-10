@@ -13,9 +13,9 @@ type Host struct {
 	ID        string    `json:"id"`
 	Hostname  string    `json:"hostname"`
 	LastSeen  time.Time `json:"last_seen"`
-	CpuUsage  int       `json:"cpu_usage"`  // YENİ
-	RamUsage  int       `json:"ram_usage"`  // YENİ
-	DiskUsage int       `json:"disk_usage"` // YENİ
+	CpuUsage  int       `json:"cpu_usage"`
+	RamUsage  int       `json:"ram_usage"`
+	DiskUsage int       `json:"disk_usage"`
 }
 
 type Repository interface {

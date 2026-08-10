@@ -1,27 +1,14 @@
-# PulseGuard - Collector + Dashboard
-#
-# The AGENT is intentionally NOT part of this compose file. On Docker
-# Desktop with WSL2, containers run inside a Linux VM, so a
-# containerized agent would report the VM's virtualized CPU/RAM/Disk
-# figures instead of the real Windows host's. Endpoint-monitoring
-# agents (Datadog, New Relic Infrastructure, Netdata, Wazuh, etc.) are
-# distributed the same way for the same reason: install the agent
-# natively on the host you actually want to monitor, and only run the
-# backend/frontend in containers.
-#
-# Run the agent separately on Windows (see pulseguard-agent/README
-# or the main project README), pointed at http://localhost:8080.
-
 services:
   collector:
     build:
       context: ./pulseguard-collector
     container_name: pulseguard-collector
+    env_file:
+      - .env
     ports:
       - "8080:8080"
     environment:
-      PULSEGUARD_SECRET: ${PULSEGUARD_SECRET:-super-gizli-sifre}
-      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      TZ: Europe/Istanbul
     volumes:
       - collector-data:/data
     restart: unless-stopped
@@ -37,6 +24,8 @@ services:
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
     container_name: pulseguard-dashboard
+    env_file:
+      - .env
     ports:
       - "5173:80"
     depends_on:

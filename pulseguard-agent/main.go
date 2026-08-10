@@ -8,8 +8,6 @@ import (
 )
 
 func main() {
-	// 0. .env dosyasindaki PULSEGUARD_SECRET gibi degerleri gercek
-	// ortam degiskenlerine yukle (Go bunu otomatik yapmaz).
 	internal.LoadDotEnv(".env")
 
 	// 1. YAML yapılandırma dosyası
@@ -67,10 +65,18 @@ func main() {
 		<-ticker.C
 		fmt.Println("\n[*] Running scheduled checks...")
 
+		_ = internal.RegisterAgent(cfg.Agent.CollectorURL)
+
+		// BUGFIX: O anki zamanı nanosaniye cinsinden eşsiz bir BatchID yapıyoruz
+		currentBatchID := fmt.Sprintf("%d", time.Now().UnixNano())
+
 		//Tüm sensörleri çalıştır kuyruğa at
 		for _, c := range checkers {
 			result := c.Check()
-			// YENİ: RAM'e append etmek yerine diske yazıyoruz
+
+			// BUGFIX: Ürettiğimiz eşsiz ID'yi her event'in içine basıyoruz
+			result.BatchID = currentBatchID
+
 			err := internal.EnqueueEvent(result)
 			if err != nil {
 				fmt.Printf("[!] Disk yazma hatası: %v\n", err)
@@ -85,7 +91,6 @@ func main() {
 
 		}
 
-		// Diskte biriken tüm verileri oku
 		// Diskte biriken tüm verileri oku
 		queuedEvents, _ := internal.DequeueAll()
 		if len(queuedEvents) > 0 {
