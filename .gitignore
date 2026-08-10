@@ -10,3 +10,6 @@ pulseguardv1.exe
 *.db-wal
 pulseguard_offline.db
 pulseguard.db
+
+*.wal
+pulseguard_offline.wal
