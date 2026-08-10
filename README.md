@@ -30,7 +30,7 @@ Projenin ana dizininde (root) bir `.env` dosyası oluşturun. Docker, Collector 
 ```env
 # /PulseGuard-MVP/.env
 PULSEGUARD_SECRET=your-super-secret-key
-SLACK_WEBHOOK_URL=[https://hooks.slack.com/services/YOUR/WEBHOOK/URL](https://hooks.slack.com/services/YOUR/WEBHOOK/URL)
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 VITE_API_BASE_URL=http://localhost:8080
 
 ### 2. Collector & Dashboard Setup (Docker)
