@@ -64,17 +64,7 @@ func LoadConfig(filename string) (*Config, error) {
 
 // LoadDotEnv, proje kokunde bulunan bir .env dosyasini okuyup icindeki
 // KEY=VALUE satirlarini gercek process ortam degiskeni olarak yukler.
-//
-// Go standart kutuphanesi .env dosyalarini otomatik OKUMAZ; os.Getenv
-// sadece isletim sistemi seviyesindeki gercek environment variable'lari
-// gorur. Bu proje harici bir dotenv paketi (godotenv vb.) kullanmadigi
-// icin, .env dosyasindaki PULSEGUARD_SECRET hic bir zaman devreye
-// girmiyor ve SendBatch her seferinde "PULSEGUARD_SECRET tanimli degil"
-// hatasiyla veri gondermeden iptal oluyordu. Bu fonksiyon o bosluk icin
-// bagimliliksiz (dependency-free) minimal bir cozum saglar.
-//
-// Zaten tanimli olan gercek ortam degiskenlerinin uzerine yazmaz (once
-// gercek env, sonra .env dosyasi gecerli olur).
+
 func LoadDotEnv(path string) {
 	data, err := os.ReadFile(path)
 	if err != nil {

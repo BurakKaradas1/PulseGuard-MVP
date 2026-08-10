@@ -18,6 +18,11 @@ PulseGuard is a lightweight, secure, and real-time Cloud Workload Protection and
 
 ## 🚀 Getting Started
 
+> **Docker ile hızlı kurulum:** Collector ve dashboard'u tek komutla
+> ayağa kaldırmak için [DOCKER.md](./DOCKER.md)'ye bak. Agent, Docker
+> Desktop/WSL2'nin sanallaştırma katmanı nedeniyle bu kurulumun dışında
+> tutulur ve Windows host'ta native çalıştırılır.
+
 ### 1. Collector (Server) Setup
 Navigate to the collector directory and set up your secure environment.
 ```bash
